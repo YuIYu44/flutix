@@ -1,9 +1,6 @@
 import 'functions.dart';
 import 'package:flutter/material.dart';
 
-//check out to this page need to use
-//go_to(BuildContext context, page,"home") ;
-
 class successcheckout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -53,28 +50,18 @@ class successcheckout extends StatelessWidget {
                       FontWeight.w200),
                 ),
                 Container(
-                    margin: EdgeInsets.only(top: 70),
-                    child: customButton(
-                        context,
-                        'My Ticket',
-                        0,
-                        140,
-                        45,
-                        Color(0xff4A9DFF),
-                        Color.fromRGBO(255, 255, 255, 1.0), () {
-                      Navigator.pushNamed(context, '/myticket');
-                    })),
-                Container(
-                    margin: EdgeInsets.only(top: 10),
+                    margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.1,
+                    ),
                     child: customButton(
                         context,
                         'Home',
                         0,
                         140,
                         45,
-                        Color.fromRGBO(255, 255, 255, 1.0),
-                        Color(0xff4A9DFF), () {
-                      Navigator.pop(context);
+                        Color(0xff4A9DFF),
+                        Color.fromRGBO(255, 255, 255, 1.0), () {
+                      Navigator.popUntil(context, ModalRoute.withName('/home'));
                     })),
               ],
             ),

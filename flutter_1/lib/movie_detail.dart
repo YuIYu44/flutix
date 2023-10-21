@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/functions.dart';
+import 'package:flutter_1/schedule&place.dart';
 
 class movie_detail extends StatefulWidget {
   const movie_detail({super.key});
@@ -158,15 +159,14 @@ class movie extends State<movie_detail> {
                   Positioned(
                       left: MediaQuery.of(context).size.width * 0.3,
                       top: MediaQuery.of(context).size.height * 0.78,
-                      child: buttonblue(
+                      child: buttonblue(context, "Book", Color(0xffffffff),
+                          Color(0xff4A9DFF), Color(0xff4A9DFF), 0, 0.32, () {
+                        Navigator.push(
                           context,
-                          "Book",
-                          Color(0xffffffff),
-                          Color(0xff4A9DFF),
-                          Color(0xff4A9DFF),
-                          0,
-                          0.32,
-                          () {})),
+                          MaterialPageRoute(
+                              builder: (context) => scheduleplace()),
+                        );
+                      })),
                 ],
               ),
             )));

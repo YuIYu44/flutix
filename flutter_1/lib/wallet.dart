@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_1/SuccesTopUp.dart';
 import 'package:flutter_1/functions.dart';
 
 List<int> category = [
@@ -155,15 +156,14 @@ class Mywallet extends State<wallet> {
                           MediaQuery.of(context).size.height * 0.1,
                           0,
                           0),
-                      child: buttonblue(
+                      child: buttonblue(context, "Top Up", Color(0xffffffff),
+                          Color(0xff4A9DFF), Color(0xff4A9DFF), 0, 0.4, () {
+                        Navigator.push(
                           context,
-                          "Top Up Now",
-                          Color(0xffffffff),
-                          Color(0xff4A9DFF),
-                          Color(0xff4A9DFF),
-                          0,
-                          0.4,
-                          () {})),
+                          MaterialPageRoute(
+                              builder: (context) => succestopup()),
+                        );
+                      })),
                 ],
               ),
             )));

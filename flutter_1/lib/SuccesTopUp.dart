@@ -55,7 +55,8 @@ class succestopup extends StatelessWidget {
                         45,
                         Color.fromRGBO(255, 255, 255, 1.0),
                         Color(0xff4A9DFF), () {
-                      go_to_movies(context);
+                      Navigator.of(context)
+                          .popUntil(ModalRoute.withName('/home'));
                     })),
               ],
             ),

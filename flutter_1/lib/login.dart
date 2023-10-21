@@ -1,5 +1,5 @@
 import 'package:flutter_1/signup.dart';
-import 'package:flutter_1/succespage.dart';
+import 'package:flutter_1/userprofiling.dart';
 
 import 'functions.dart';
 import 'package:flutter/material.dart';
@@ -56,17 +56,18 @@ class _login extends State<login> {
                 14,
                 Colors.black,
                 FontWeight.bold),
-            texts_exo(
-                context,
-                errorText,
-                13,
-                MediaQuery.of(context).size.height * 0.67,
-                0,
-                MediaQuery.of(context).size.width * 0.16,
-                0,
-                Colors.red,
-                TextAlign.left,
-                FontWeight.bold),
+            if (errorText != "")
+              texts_exo(
+                  context,
+                  errorText,
+                  13,
+                  MediaQuery.of(context).size.height * 0.67,
+                  0,
+                  MediaQuery.of(context).size.width * 0.16,
+                  0,
+                  Colors.red,
+                  TextAlign.left,
+                  FontWeight.bold),
             customButton(
                 context,
                 'Log In',
@@ -75,13 +76,10 @@ class _login extends State<login> {
                 45,
                 Color(0xff4A9DFF),
                 Color.fromRGBO(255, 255, 255, 1.0), () {
-              // if (login succesfull){
-              // go_to(context, userprofilling());}
-              //else{
               setState(() {
                 errorText = "Account Not Found!";
               });
-              go_to(context, succespage());
+              go_to(context, userprofiling());
             }),
             Positioned(
               bottom: MediaQuery.of(context).size.height * 0.06,

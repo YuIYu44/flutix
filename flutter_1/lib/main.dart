@@ -19,20 +19,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "FLUTIX",
-      home: splashscreen(),
-    );
+        title: "FLUTIX",
+        home: splashscreen(),
+        routes: {'/home': (context) => home()});
   }
 }
 
 class splashscreen extends StatelessWidget {
-  void navigateToSecondPage(BuildContext context, page) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => page),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

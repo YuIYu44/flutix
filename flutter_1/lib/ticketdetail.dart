@@ -105,11 +105,11 @@ class _ticketdetailState extends State<ticketdetail> {
                           children: [
                             texts_exo(context, "The cinema", 20, 0, 0, 0, 0,
                                 Colors.black, TextAlign.left, FontWeight.w600),
-                            texts_exo(context, "Time  :lalalal", 20, 0, 0, 0, 0,
+                            texts_exo(context, "Time  :lalalal", 18, 0, 0, 0, 0,
                                 Colors.black, TextAlign.left, FontWeight.w100),
-                            texts_exo(context, "Date  :lalalal", 20, 0, 0, 0, 0,
+                            texts_exo(context, "Date  :lalalal", 18, 0, 0, 0, 0,
                                 Colors.black, TextAlign.left, FontWeight.w100),
-                            texts_exo(context, "Seat  :lalalal", 20, 0, 0, 0, 0,
+                            texts_exo(context, "Seat  :lalalal", 18, 0, 0, 0, 0,
                                 Colors.black, TextAlign.left, FontWeight.w100)
                           ])),
                 ])),

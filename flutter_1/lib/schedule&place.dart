@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/functions.dart';
+import 'package:flutter_1/seat_page.dart';
 
 class scheduleplace extends StatefulWidget {
   scheduleplace({super.key});
@@ -250,8 +251,12 @@ class schdp extends State<scheduleplace> {
                           Color(0xff4A9DFF),
                           Color(0xff4A9DFF),
                           0.8,
-                          0.37,
-                          () {})),
+                          0.37, () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => seat_page()),
+                        );
+                      })),
                 ]))));
   }
 }

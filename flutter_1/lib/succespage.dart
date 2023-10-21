@@ -1,10 +1,30 @@
+import 'dart:convert';
 import 'package:flutter_1/home.dart';
 import 'functions.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:csv/csv.dart';
 
 class succespage extends StatelessWidget {
+  Future<void> addDataCsv(List<dynamic> row) async {
+    final documentsDirectory = await getApplicationDocumentsDirectory();
+    final file = File('${documentsDirectory.path}/data.csv');
+    print(documentsDirectory);
+
+    if (!file.existsSync()) {
+      file.createSync(recursive: true);
+      file.writeAsStringSync('');
+    }
+
+    final String updatedCsvData = ListToCsvConverter().convert([row]);
+    file.writeAsStringSync(updatedCsvData, mode: FileMode.write);
+    print(CsvToListConverter().convert(file.readAsStringSync()));
+  }
+
   @override
   Widget build(BuildContext context) {
+    addDataCsv(["YUI", "1235"]);
     return WillPopScope(
         onWillPop: () {
           return Future.value(false);

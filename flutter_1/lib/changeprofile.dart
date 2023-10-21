@@ -91,7 +91,7 @@ class _changeprofile extends State<changeprofile> {
                 Container(
                   margin: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.1,
-                      right: MediaQuery.of(context).size.width * 0.65),
+                      right: MediaQuery.of(context).size.width * 0.55),
                   child: buttonblue(context, "Change", Color(0xffffffff),
                       Color(0xff4A9DFF), Color(0xff4A9DFF), 0, 0.25, () {
                     Navigator.pop(context);
