@@ -1,31 +1,9 @@
-import 'package:flutter_1/home.dart';
-import 'functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/login.dart';
-import 'package:flutter_1/signup.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:flutter_1/services/services.dart';
+import 'login.dart';
+import 'signup.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "FLUTIX",
-        home: splashscreen(),
-        routes: {'/home': (context) => home()});
-  }
-}
-
-class splashscreen extends StatelessWidget {
+class splashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +32,7 @@ class splashscreen extends StatelessWidget {
             texts_bubble(
                 context,
                 'Watch Movie With Your Friends,\nFamilies, and Lovers Much Easier',
-                14.0,
+                15.0,
                 MediaQuery.of(context).size.height * 0.6,
                 0,
                 0,
@@ -69,22 +47,23 @@ class splashscreen extends StatelessWidget {
                 45,
                 Color(0xff4A9DFF),
                 Color.fromRGBO(255, 255, 255, 1.0), () {
-              //   async {
-              // await AutServices.signUp("ayulestari@gmail.com", "1234", "ayu",
-              //     ["Action", "Horror", "Sci-Fi", "Drama"], "Korean");
-              // }
-              // go_to(context, login());
-              go_to(context, login());
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => login()));
             }),
             customButton(
                 context,
                 'Sign Up',
-                MediaQuery.of(context).size.height * 0.8,
+                MediaQuery.of(context).size.height * 0.72 + 55,
                 150,
                 45,
                 Color.fromRGBO(255, 255, 255, 1.0),
                 Color(0xff4A9DFF), () {
-              go_to(context, signup());
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => signup()));
             }),
           ],
         ),

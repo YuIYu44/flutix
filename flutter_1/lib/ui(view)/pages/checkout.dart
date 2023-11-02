@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/SuccesCheckout.dart';
-import 'package:flutter_1/functions.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
+import 'SuccesCheckout.dart';
 
 class checkout extends StatefulWidget {
   const checkout({super.key});
@@ -142,7 +142,6 @@ class _checkoutState extends State<checkout> {
                       ],
                     ),
                     Positioned(
-                        top: MediaQuery.of(context).size.height * 0.8,
                         left: MediaQuery.of(context).size.width * 0.55,
                         child: buttonblue(
                             context,
@@ -150,7 +149,7 @@ class _checkoutState extends State<checkout> {
                             Color(0xffffffff),
                             Color(0xff4A9DFF),
                             Color(0xff4A9DFF),
-                            0,
+                            0.76,
                             0.35, () {
                           if (sufficient == 0) {
                             Navigator.push(

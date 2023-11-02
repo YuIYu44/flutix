@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/functions.dart';
-import 'package:flutter_1/seat_page.dart';
+import 'seat_page.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class scheduleplace extends StatefulWidget {
   scheduleplace({super.key});
@@ -237,7 +237,7 @@ class schdp extends State<scheduleplace> {
                     Navigator.pop(context);
                   }),
                   Positioned(
-                      top: MediaQuery.of(context).size.height * 0.78,
+                      top: MediaQuery.of(context).size.height * 0.75,
                       child: Container(
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width,
@@ -250,7 +250,7 @@ class schdp extends State<scheduleplace> {
                           Color(0xffffffff),
                           Color(0xff4A9DFF),
                           Color(0xff4A9DFF),
-                          0.8,
+                          0.76,
                           0.37, () {
                         Navigator.push(
                           context,

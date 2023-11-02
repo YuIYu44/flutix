@@ -1,5 +1,5 @@
-import 'functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class successcheckout extends StatelessWidget {
   @override
@@ -25,14 +25,14 @@ class successcheckout extends StatelessWidget {
                   child: texts_exo(
                       context,
                       "Don't forget to but your popcorn",
-                      15,
+                      18,
                       0,
                       0,
                       0,
                       0,
                       Colors.black,
                       TextAlign.center,
-                      FontWeight.w200),
+                      FontWeight.normal),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 80),
@@ -47,7 +47,7 @@ class successcheckout extends StatelessWidget {
                       0,
                       Colors.black,
                       TextAlign.center,
-                      FontWeight.w200),
+                      FontWeight.normal),
                 ),
                 Container(
                     margin: EdgeInsets.only(

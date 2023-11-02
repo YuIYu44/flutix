@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/checkout.dart';
-import 'package:flutter_1/functions.dart';
+import 'checkout.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class seat_page extends StatefulWidget {
   const seat_page({super.key});
@@ -202,7 +202,7 @@ class seat_pageState extends State<seat_page> {
                             Colors.white,
                             Color.fromRGBO(74, 157, 255, 1.0),
                             Color(0xff4A9DFF),
-                            0.8,
+                            0.74,
                             0.32, () {
                           Navigator.push(
                             context,

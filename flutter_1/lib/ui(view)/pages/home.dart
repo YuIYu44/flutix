@@ -1,15 +1,16 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_1/changeprofile.dart';
-import 'package:flutter_1/functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/login.dart';
-import 'package:flutter_1/movie_detail.dart';
-import 'package:flutter_1/ticketdetail.dart';
-import 'package:flutter_1/wallet.dart';
+import 'package:flutter_1/bloc(modelview)/read_storage.dart';
+import 'package:flutter_1/services/services.dart';
+import 'package:flutter_1/ui(view)/main.dart';
+import 'changeprofile.dart';
+import 'movie_detail.dart';
+import 'login.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
+import 'ticketdetail.dart';
+import 'wallet.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
-
   @override
   State<home> createState() => homeState();
 }
@@ -40,6 +41,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
   }
 
   Widget movies_home(BuildContext context) {
+    StorageCubit().up_file_firebase();
     return SingleChildScrollView(
         child: Padding(
             padding: customEdgeInsets(context),
@@ -341,7 +343,6 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
   }
 
   Widget myticket(BuildContext context) {
-    int _selectedTabIndex = 0;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -354,7 +355,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                 20,
                 MediaQuery.of(context).size.width * 0.05,
                 0),
-            color: Colors.white,
+            color: Colors.transparent,
             child: TabBar(
               indicator: BoxDecoration(color: Colors.white),
               indicatorPadding: EdgeInsets.zero,
@@ -371,9 +372,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                 fontWeight: FontWeight.bold,
               ),
               onTap: (index) {
-                setState(() {
-                  _selectedTabIndex = index;
-                });
+                setState(() {});
               },
               tabs: [
                 Tab(
@@ -404,19 +403,19 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Username",
+          Text(getValue_class()[2],
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 14,
+                fontSize: 20,
                 fontFamily: 'Exo',
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.bold,
               )),
-          Text("email@gmail.com",
+          Text(getValue_class()[0],
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 14,
+                fontSize: 17,
                 fontFamily: 'Exo',
-                fontWeight: FontWeight.w200,
+                fontWeight: FontWeight.normal,
               )),
           buttonblue(context, "Edit Profile", Color(0xff4A9DFF),
               Color(0xffffffff), Color(0xff4A9DFF), 0.03, 0.4, () {
@@ -431,12 +430,27 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
           buttonblue(context, "Rate Flutix App", Color(0xff4A9DFF),
               Color(0xffffffff), Color(0xff4A9DFF), 0.05, 0.7, () {}),
           buttonblue(context, "Log Out", Color(0xff4A9DFF), Color(0xffffffff),
-              Color(0xff4A9DFF), 0.05, 0.7, () {
-            go_to(context, login());
+              Color(0xff4A9DFF), 0.05, 0.7, () async {
+            await deletepref();
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (BuildContext context) => login()));
           })
         ],
       ),
     ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    List<String> _balance_name =
+        await UserService.getvalue(getValue_class()[0]);
+    user.update_balance(int.tryParse(_balance_name[1])!);
+    user.update_name(_balance_name[0]);
   }
 
   @override

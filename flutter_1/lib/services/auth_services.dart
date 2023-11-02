@@ -6,32 +6,97 @@ class AutServices {
 
   static get user1 => null;
 
-  static Future<void> signUp(String email, String password, String name,
-      List<String> selectedGenres, String selectedLanguage) async {
+  static Future<String> signUp(
+      String email, String password, String name) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-
-      User1 user1 = result.user!.convertToUser(
-          name: name,
-          selectedGenres: selectedGenres,
-          selectedLanguage: selectedLanguage);
-
-      await UserService.updateUser(user1);
-    } catch (e) {}
+      if (name.length > 5 && double.tryParse(name) != null && name.length > 5) {
+        UserCredential result = await _auth.createUserWithEmailAndPassword(
+            email: email.toString(), password: password.toString());
+        User1 user1 = result.user!.convertToUser(
+            email: email, name: name.toString(), selectedGenres: []);
+        await UserService.setUser(user1);
+        return "";
+      }
+      return "Password & Username must contain at least 6 characters and one alphabet character";
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        return e.toString().toUpperCase().split("]")[1];
+      }
+      return "Error Is Found";
+    }
   }
 
-  static Future<void> signIn(String email, String password) async {
+  static Future<String> change(
+      String email, String password, String type, whatyouwant) async {
     try {
-      UserCredential result = (await _auth.signInWithEmailAndPassword(
-          email: email, password: password));
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email.toString(), password: password.toString());
+      User1 user1 = result.user!.convertToUser(email: email);
+      await UserService.updateUser(user1, type, whatyouwant);
+      return "";
     } catch (e) {}
+    return "Error Is Found";
   }
-}
 
-class SignInSignUpResult {
-  final User1 user1;
-  final String message;
+  static Future<bool> genre_exist(String email) async {
+    try {
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(email).get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (data['selectedGenres'].length != 0) {
+          return true;
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
 
-  SignInSignUpResult({required this.user1, required this.message});
+  static Future<String> signIn(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+          email: email.toString(), password: password.toString());
+      return "";
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        if (e.code == "INVALID_LOGIN_CREDENTIALS") {
+          return "Account Not Found";
+        }
+        return e.toString().toUpperCase().split("]")[1];
+      }
+      return "Error Is Found";
+    }
+  }
+
+  static Future<String> changePassword(
+      email, String name, String currentPassword, String newPassword) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: currentPassword.toString(),
+      );
+
+      User? user = userCredential.user;
+
+      if (user != null &&
+          newPassword.length > 5 &&
+          name.length > 5 &&
+          name != "" &&
+          newPassword != currentPassword) {
+        try {
+          await user.updatePassword(newPassword);
+          change(email, newPassword, "name", name);
+          return "";
+        } catch (e) {
+          print(e);
+          return e.toString().toUpperCase().split("]")[1];
+        }
+      } else {
+        return "New Password & Username must be new and contain at least 6 characters";
+      }
+    } catch (e) {
+      return e.toString().toUpperCase().split("]")[1];
+    }
+  }
 }

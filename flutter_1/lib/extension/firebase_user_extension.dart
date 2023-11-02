@@ -1,13 +1,12 @@
 part of 'extension.dart';
 
 extension FirebaseUserExtension on User {
-  User1 convertToUser(
+  convertToUser(
           {String name = "No Name",
           String email = "No Email",
           List<String> selectedGenres = const [],
-          String selectedLanguage = "English",
-          int balance = 50000}) =>
-      User1(uid, email, name, selectedGenres, selectedLanguage, balance);
+          int balance = 0}) =>
+      User1(email, name, selectedGenres, balance);
 
-  Future<User1> fromFireStore() async => await UserService.getUser(this.uid);
+  Future<User1> fromFireStore() async => await UserService.getUser(this.email!);
 }

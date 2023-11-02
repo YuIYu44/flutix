@@ -1,5 +1,6 @@
-import 'functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_1/ui(view)/pages/wallet.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class succestopup extends StatelessWidget {
   @override
@@ -43,7 +44,10 @@ class succestopup extends StatelessWidget {
                         45,
                         Color(0xff4A9DFF),
                         Color.fromRGBO(255, 255, 255, 1.0), () {
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => wallet()),
+                      );
                     })),
                 Container(
                     margin: EdgeInsets.only(top: 10),

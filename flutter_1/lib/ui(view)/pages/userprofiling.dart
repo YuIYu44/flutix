@@ -1,16 +1,7 @@
-import 'package:flutter_1/succespage.dart';
-import 'functions.dart';
 import 'package:flutter/material.dart';
-
-List<String> category = [
-  "Horror",
-  "Adventure",
-  "Fantasy",
-  "Crime",
-  "Sci-Fi",
-  "Romance",
-  "Comedy"
-];
+import 'package:flutter_1/services/services.dart';
+import 'package:flutter_1/ui(view)/pages/home.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class userprofiling extends StatefulWidget {
   @override
@@ -18,6 +9,15 @@ class userprofiling extends StatefulWidget {
 }
 
 class checklistspage extends State<userprofiling> {
+  List<String> category = [
+    "Horror",
+    "Adventure",
+    "Fantasy",
+    "Crime",
+    "Sci-Fi",
+    "Romance",
+    "Comedy"
+  ];
   List<bool> checklistStates = List.generate(7, (index) => false);
   @override
   Widget build(BuildContext context) {
@@ -100,14 +100,42 @@ class checklistspage extends State<userprofiling> {
                       Colors.white,
                       Color(0xff4A9DFF),
                       0.75,
-                      0.3, () {
+                      0.3, () async {
+                    await deletepref();
                     Navigator.pop(context);
                   }),
                   Positioned(
                     left: MediaQuery.of(context).size.width * 0.5,
-                    child: buttonblue(context, "Next", Colors.white,
-                        Color(0xff4A9DFF), Color(0xff4A9DFF), 0.75, 0.3, () {
-                      go_to(context, succespage());
+                    child: buttonblue(
+                        context,
+                        "Next",
+                        Colors.white,
+                        Color(0xff4A9DFF),
+                        Color(0xff4A9DFF),
+                        0.75,
+                        0.3, () async {
+                      int truelength = checklistStates
+                          .where((element) => element == true)
+                          .length;
+                      List<String> result = category
+                          .asMap()
+                          .entries
+                          .where((entry) => checklistStates[entry.key])
+                          .map((entry) => entry.value)
+                          .toList();
+                      if (truelength <= 2 && truelength != 0) {
+                        String genreadd = await AutServices.change(
+                            getValue_class()[0],
+                            getValue_class()[1].toString(),
+                            'selectedGenres',
+                            result);
+                        if (genreadd == "") {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => home()));
+                        }
+                      }
                     }),
                   )
                 ]))));

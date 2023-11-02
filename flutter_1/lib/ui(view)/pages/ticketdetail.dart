@@ -1,5 +1,5 @@
-import 'functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 List<int> rated = [0, 1, 2, 3, 4, 5];
 
@@ -105,12 +105,30 @@ class _ticketdetailState extends State<ticketdetail> {
                           children: [
                             texts_exo(context, "The cinema", 20, 0, 0, 0, 0,
                                 Colors.black, TextAlign.left, FontWeight.w600),
-                            texts_exo(context, "Time  :lalalal", 18, 0, 0, 0, 0,
-                                Colors.black, TextAlign.left, FontWeight.w100),
-                            texts_exo(context, "Date  :lalalal", 18, 0, 0, 0, 0,
-                                Colors.black, TextAlign.left, FontWeight.w100),
+                            texts_exo(
+                                context,
+                                "Time  :lalalal",
+                                18,
+                                0,
+                                0,
+                                0,
+                                0,
+                                Colors.black,
+                                TextAlign.left,
+                                FontWeight.normal),
+                            texts_exo(
+                                context,
+                                "Date  :lalalal",
+                                18,
+                                0,
+                                0,
+                                0,
+                                0,
+                                Colors.black,
+                                TextAlign.left,
+                                FontWeight.normal),
                             texts_exo(context, "Seat  :lalalal", 18, 0, 0, 0, 0,
-                                Colors.black, TextAlign.left, FontWeight.w100)
+                                Colors.black, TextAlign.left, FontWeight.normal)
                           ])),
                 ])),
             if (previousPage == "new")

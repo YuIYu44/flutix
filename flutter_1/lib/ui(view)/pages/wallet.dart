@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/SuccesTopUp.dart';
-import 'package:flutter_1/functions.dart';
+import '../main.dart';
+import 'package:flutter_1/services/services.dart';
+import 'package:flutter_1/ui(view)/widget/widget.dart';
+import 'SuccesTopUp.dart';
 
-List<int> category = [
+List<int> categories = [
   25000,
   50000,
   100000,
@@ -10,7 +12,7 @@ List<int> category = [
   200000,
   250000,
   400000,
-  500000
+  500000,
 ];
 
 class wallet extends StatefulWidget {
@@ -21,7 +23,7 @@ class wallet extends StatefulWidget {
 }
 
 class Mywallet extends State<wallet> {
-  List<bool> buttonStates = List.generate(category.length, (index) => false);
+  List<bool> buttonStates = List.generate(categories.length, (index) => false);
   void _toggleButtonState(int index) {
     setState(() {
       for (int i = 0; i < buttonStates.length; i++) {
@@ -83,7 +85,7 @@ class Mywallet extends State<wallet> {
                                           MediaQuery.of(context).size.height *
                                               0.01),
                                   child: Text(
-                                    "Rp 30000",
+                                    getValue_class()[3],
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       color: Colors.black,
@@ -116,7 +118,7 @@ class Mywallet extends State<wallet> {
                           shrinkWrap: true,
                           crossAxisCount: 3,
                           physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(category.length, (index) {
+                          children: List.generate(categories.length, (index) {
                             return Column(
                               children: [
                                 Container(
@@ -124,8 +126,9 @@ class Mywallet extends State<wallet> {
                                         0.28,
                                     height: 40,
                                     child: OutlinedButton(
-                                      onPressed: () =>
-                                          _toggleButtonState(index),
+                                      onPressed: () {
+                                        _toggleButtonState(index);
+                                      },
                                       style: OutlinedButton.styleFrom(
                                           backgroundColor: buttonStates[index]
                                               ? Color.fromRGBO(
@@ -135,7 +138,7 @@ class Mywallet extends State<wallet> {
                                               width: 1.0,
                                               color: Color(0xFF4600DC))),
                                       child: Text(
-                                        category[index].toString(),
+                                        categories[index].toString(),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           color: buttonStates[index]
@@ -158,7 +161,16 @@ class Mywallet extends State<wallet> {
                           0),
                       child: buttonblue(context, "Top Up", Color(0xffffffff),
                           Color(0xff4A9DFF), Color(0xff4A9DFF), 0, 0.4, () {
-                        Navigator.push(
+                        int balance = categories[
+                            buttonStates.indexWhere((value) => value == true)];
+                        AutServices.change(
+                            getValue_class()[0],
+                            getValue_class()[1],
+                            'balance',
+                            int.tryParse(getValue_class()[3])! + balance);
+                        user.update_balance(
+                            int.tryParse(getValue_class()[3])! + balance);
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => succestopup()),
