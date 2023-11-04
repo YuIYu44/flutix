@@ -1,174 +1,223 @@
 import 'package:flutter/material.dart';
-import 'schedule&place.dart';
+import 'package:flutter_1/services/show_film.dart';
+import 'package:flutter_1/ui(view)/pages/schedule&place.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 
+List<dynamic> data = [];
+
 class movie_detail extends StatefulWidget {
-  const movie_detail({super.key});
+  final List<dynamic> data;
+  const movie_detail({Key? key, required this.data}) : super(key: key);
 
   @override
-  State<movie_detail> createState() => movie();
+  State<movie_detail> createState() => MovieDetailState(data);
 }
 
-class movie extends State<movie_detail> {
+class MovieDetailState extends State<movie_detail> {
+  MovieDetailState(List<dynamic> datas) {
+    data = datas;
+  }
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () {
-          return Future.value(false);
-        },
-        child: Scaffold(
-            appBar: barflutix(context),
-            body: Padding(
-              padding: customEdgeInsets(context),
-              child: Stack(
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buttonblue(context, "Back", Color(0xff4A9DFF),
-                            Color(0xffffffff), Color(0xff4A9DFF), 0, 0.23, () {
-                          Navigator.pop(context);
-                        }),
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height * 0.03),
-                          width: MediaQuery.of(context).size.width * 0.97,
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          color: Colors.black,
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.02),
-                            width: MediaQuery.of(context).size.width * 0.97,
-                            child: Text(
-                              "The Title",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 22,
-                                fontFamily: 'Exo',
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    show_film show = show_film(data);
+    return FutureBuilder(
+        future: show.titles(),
+        builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return WillPopScope(
+              onWillPop: () {
+                return Future.value(false);
+              },
+              child: Scaffold(
+                appBar: barflutix(context),
+                body: Padding(
+                    padding: customEdgeInsets(context),
+                    child: SingleChildScrollView(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(children: [
-                              Text(
-                                "4.0",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontFamily: 'Exo',
-                                  fontWeight: FontWeight.normal,
+                            buttonblue(
+                                context,
+                                "Back",
+                                Color(0xff4A9DFF),
+                                Color(0xffffffff),
+                                Color(0xff4A9DFF),
+                                0,
+                                0.23, () {
+                              Navigator.pop(context);
+                            }),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.03,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.15),
+                                width: 300,
+                                height: 450,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: NetworkImage(
+                                    show.title_(0),
+                                  ),
+                                  fit: BoxFit.cover,
+                                ))),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.02),
+                                width: MediaQuery.of(context).size.width * 0.97,
+                                child: Text(
+                                  show.title_(1),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 22,
+                                    fontFamily: 'Exo',
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(children: [
+                                  Text(
+                                    "4.0",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontFamily: 'Exo',
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
+                                  Icon(Icons.star, color: Color(0xFF4600DC))
+                                ]),
+                                Text(
+                                  show.title_(2),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: 'Exo',
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                              Icon(Icons.star, color: Color(0xFF4600DC))
-                            ]),
-                            Text(
-                              "Adventure",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontFamily: 'Exo',
-                                fontWeight: FontWeight.normal,
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.02),
-                            child: Text(
-                              "Description:",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontFamily: 'Exo',
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.01),
-                            child: Text(
-                              "Katniss Everdeen voluntarily takes her younger sister's place in the Hunger Games: a televised competition in which two teenagers from each of the twelve Districts of Panem are chosen at random to fight to the death.",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontFamily: 'Exo',
-                                  fontWeight: FontWeight.normal),
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.02),
-                            child: Text(
-                              "Cast:",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                  fontFamily: 'Exo',
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.01),
-                            width: MediaQuery.of(context).size.width * 0.9,
-                            height: MediaQuery.of(context).size.height * 0.06,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 8,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "The Artist Names",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 115, 22, 22),
-                                                fontSize: 14,
-                                                fontFamily: 'Exo',
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                            Text(
-                                              "as The Character",
-                                              textAlign: TextAlign.left,
-                                              style: TextStyle(
-                                                color: Color.fromARGB(
-                                                    255, 115, 22, 22),
-                                                fontSize: 14,
-                                                fontFamily: 'Exo',
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                            ),
-                                          ]));
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.02),
+                                child: Text(
+                                  "Description:",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontFamily: 'Exo',
+                                      fontWeight: FontWeight.bold),
+                                )),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.01),
+                                child: Text(
+                                  show.title_(3),
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontFamily: 'Exo',
+                                      fontWeight: FontWeight.normal),
+                                )),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.02),
+                                child: Text(
+                                  "Cast:",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                      fontFamily: 'Exo',
+                                      fontWeight: FontWeight.bold),
+                                )),
+                            Container(
+                                margin: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height *
+                                        0.01),
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.06,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 8,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "The Artist Names",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 115, 22, 22),
+                                                    fontSize: 14,
+                                                    fontFamily: 'Exo',
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "as The Character",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 115, 22, 22),
+                                                    fontSize: 14,
+                                                    fontFamily: 'Exo',
+                                                    fontWeight:
+                                                        FontWeight.normal,
+                                                  ),
+                                                ),
+                                              ]));
+                                    })),
+                            Container(
+                                margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.width * 0.3,
+                                ),
+                                child: buttonblue(
+                                    context,
+                                    "Book",
+                                    Color(0xffffffff),
+                                    Color(0xff4A9DFF),
+                                    Color(0xff4A9DFF),
+                                    0,
+                                    0.32, () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => scheduleplace()),
+                                  );
                                 })),
-                      ]),
-                  Positioned(
-                      left: MediaQuery.of(context).size.width * 0.3,
-                      top: MediaQuery.of(context).size.height * 0.72,
-                      child: buttonblue(context, "Book", Color(0xffffffff),
-                          Color(0xff4A9DFF), Color(0xff4A9DFF), 0, 0.32, () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => scheduleplace()),
-                        );
-                      })),
-                ],
+                          ]),
+                    )),
               ),
-            )));
+            );
+            // ));
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }

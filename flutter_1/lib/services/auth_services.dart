@@ -59,6 +59,9 @@ class AutServices {
       return "";
     } catch (e) {
       if (e is FirebaseAuthException) {
+        if (e.code == "UNABLE TO ESTABLISH CONNECTION ON CHANNEL") {
+          return "Please fill all of the fields";
+        }
         if (e.code == "INVALID_LOGIN_CREDENTIALS") {
           return "Account Not Found";
         }

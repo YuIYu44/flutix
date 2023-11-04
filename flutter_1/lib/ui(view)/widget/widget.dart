@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_1/bloc(modelview)/films.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../main.dart';
 import "package:shared_preferences/shared_preferences.dart";
@@ -232,4 +233,8 @@ saveValue(key, key2, value, value2) async {
 
 List<String> getValue_class() {
   return user.state;
+}
+
+savefilm(data) async {
+  films_().addfilms(data);
 }

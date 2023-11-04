@@ -46,6 +46,7 @@ dependencies:
   csv: ^5.1.1 
   beautiful_soup_dart: ^0.3.0
   http: ^1.1.0 
+  firebase_database: ^10.3.3 
   
 dev_dependencies:
   flutter_test:
