@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -43,22 +44,24 @@ class Storage {
               .then((DatabaseEvent databaseEvent) {
             if (databaseEvent.snapshot.value == null) {
               List<String> dateList = data[a][2].split(',');
-
               for (int dates = 0; dates < dateList.length; dates++) {
                 List<String> cinemaList = data[a][3].split(',');
                 _dbRef
                     .child("film")
                     .child(data[a][0])
-                    .set({'category': data[a][1]});
+                    .update({'category': data[a][1], 'rating': 0});
+
                 for (int cinemas = 0; cinemas < cinemaList.length; cinemas++) {
                   List<String> priceList =
                       data[a][data[a].length - 1].split(',');
+
                   _dbRef
                       .child("film")
                       .child(data[a][0])
+                      .child('dates')
                       .child(dateList[dates])
                       .child(cinemaList[cinemas])
-                      .set({"price": priceList[cinemas]});
+                      .update({"price": int.tryParse(priceList[cinemas])});
 
                   List<String> timeList = data[a][4 + cinemas].split(',');
 
@@ -66,10 +69,11 @@ class Storage {
                     _dbRef
                         .child("film")
                         .child(data[a][0])
+                        .child('dates')
                         .child(dateList[dates])
                         .child(cinemaList[cinemas])
-                        .child(timeList[times].toString())
-                        .set({
+                        .child(timeList[times])
+                        .update({
                       "seat": 0,
                     });
                   }

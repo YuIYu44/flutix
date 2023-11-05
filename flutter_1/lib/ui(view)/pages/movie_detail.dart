@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_1/services/show_film.dart';
 import 'package:flutter_1/ui(view)/pages/schedule&place.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 
-List<dynamic> data = [];
+String data = "";
 
 class movie_detail extends StatefulWidget {
-  final List<dynamic> data;
+  final String data;
   const movie_detail({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -14,7 +15,7 @@ class movie_detail extends StatefulWidget {
 }
 
 class MovieDetailState extends State<movie_detail> {
-  MovieDetailState(List<dynamic> datas) {
+  MovieDetailState(String datas) {
     data = datas;
   }
   @override
@@ -81,7 +82,7 @@ class MovieDetailState extends State<movie_detail> {
                               children: [
                                 Row(children: [
                                   Text(
-                                    "4.0",
+                                    show.title_(2) + "   ",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black,
@@ -90,10 +91,14 @@ class MovieDetailState extends State<movie_detail> {
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
-                                  Icon(Icons.star, color: Color(0xFF4600DC))
+                                  Icon(
+                                    CupertinoIcons.star,
+                                    color: Color(0xFF4600DC),
+                                    size: 20,
+                                  )
                                 ]),
                                 Text(
-                                  show.title_(2),
+                                  show.title_(3),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
@@ -122,7 +127,7 @@ class MovieDetailState extends State<movie_detail> {
                                     top: MediaQuery.of(context).size.height *
                                         0.01),
                                 child: Text(
-                                  show.title_(3),
+                                  show.title_(4),
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       color: Colors.black,
@@ -152,7 +157,7 @@ class MovieDetailState extends State<movie_detail> {
                                     MediaQuery.of(context).size.height * 0.06,
                                 child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: 8,
+                                    itemCount: show.title_(5).length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return Container(
@@ -165,11 +170,10 @@ class MovieDetailState extends State<movie_detail> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "The Artist Names",
+                                                  show.title_(5)[index][0],
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 115, 22, 22),
+                                                    color: Colors.black,
                                                     fontSize: 14,
                                                     fontFamily: 'Exo',
                                                     fontWeight:
@@ -177,11 +181,11 @@ class MovieDetailState extends State<movie_detail> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  "as The Character",
+                                                  "as " +
+                                                      show.title_(5)[index][1],
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 115, 22, 22),
+                                                    color: Colors.black,
                                                     fontSize: 14,
                                                     fontFamily: 'Exo',
                                                     fontWeight:
@@ -205,7 +209,8 @@ class MovieDetailState extends State<movie_detail> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => scheduleplace()),
+                                        builder: (context) =>
+                                            scheduleplace(data: data)),
                                   );
                                 })),
                           ]),
@@ -215,7 +220,7 @@ class MovieDetailState extends State<movie_detail> {
             // ));
           } else {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(backgroundColor: Colors.white),
             );
           }
         });

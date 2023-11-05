@@ -190,9 +190,9 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 movie_detail(
-                                                                    data: films
-                                                                            .data[
-                                                                        index])));
+                                                                    data: films.data[
+                                                                            index]
+                                                                        [0])));
                                                   },
                                                   child: Text(''),
                                                 ));
