@@ -4,10 +4,10 @@ part 'user_state.dart';
 
 class user_ extends Cubit<userstate> {
   user_() : super(userstate(uservalue: [""])) {
-    _loadUserValue();
+    loadUserValue();
   }
 
-  Future<void> _loadUserValue() async {
+  Future<void> loadUserValue() async {
     final prefs = await SharedPreferences.getInstance();
     final email = prefs.getString('email') ?? "";
     final password = prefs.getString('password') ?? "";

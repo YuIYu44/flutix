@@ -7,6 +7,13 @@ class show_film {
   show_film(datas) {
     website_link = datas;
   }
+  //show_film(userCubit.state.uservalue[0]).getposts_weblink().data['link'];
+  // Future getone_docs(where, value) async {
+  //   DocumentSnapshot qn =
+  //       await firestore.doc("films/film/name/${website_link}${where}").get();
+  //   Map<String, dynamic>? data = await qn.data() as Map<String, dynamic>?;
+  //   return data![value];
+  // }
 
   Future getposts(kind) async {
     var firestore = FirebaseFirestore.instance;
@@ -15,24 +22,15 @@ class show_film {
     return qn.docs;
   }
 
-  Future getposts_weblink() async {
+  Future getposts_weblink(something) async {
     DocumentSnapshot qn = await firestore
-        .collection("films")
-        .doc("film")
-        .collection("name")
-        .doc(website_link)
+        .doc("films/film/name/${website_link}${something}")
         .get();
-
     return qn.data();
   }
 
   Future getposts_date() async {
-    qn_ = await firestore
-        .collection("films")
-        .doc("film")
-        .collection("name")
-        .doc(website_link)
-        .collection("dates");
+    qn_ = await firestore.collection("films/film/name/${website_link}/dates");
     QuerySnapshot qn = await qn_.get();
     return qn.docs;
   }
@@ -53,31 +51,11 @@ class show_film {
     return qn2.docs;
   }
 
-  // Future<void> show_schedule() async {
-  //   List<dynamic> dates = await getvalue('dates');
-  //   for (int i = 0; i < dates.length; i++) {
-  //     dates.sort((a, b) {
-  //       List<String> partsA = a.split("-");
-  //       List<String> partsB = b.split("-");
-  //       int dayA = int.parse(partsA[0]);
-  //       int dayB = int.parse(partsB[0]);
-  //       return dayA.compareTo(dayB);
-  //     });
-  //     // title.add([dates[i]]);
-  //     final cinemas = await getvalue("/dates/" + dates[i]);
-  //     for (int y = 0; y < cinemas.length; y++) {
-  //       List<dynamic> time =
-  //           await getvalue("/dates/" + dates[i] + "/" + cinemas[y]);
-  //       List<int> time_ = time
-  //           .where((element) => element != "price")
-  //           .map((dynamic element) => int.parse(element))
-  //           .toList();
-  //       time_.sort();
-  //       // title[i].add([cinemas[y]]);
-  //       // title[i][y + 1].add(time_);
-  //     }
-  //   }
-  // }
+  Future getposts_seat(inside) async {
+    DocumentSnapshot qn =
+        await firestore.doc("films/film/name/${inside}").get();
+    return qn.data();
+  }
 
   // Future<List<dynamic>> getvalue(childs) async {
   //   final all = await ref.child('film').child(website_link).child(childs).get();

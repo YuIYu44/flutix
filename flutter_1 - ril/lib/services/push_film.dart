@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
@@ -52,7 +51,7 @@ class Storage {
         if (kind == "coming_soon") {
           await film_.update({'category': data[a][1]});
         } else {
-          if (dataMap?['rating'] == null) {
+          if (dataMap['rating'] == null) {
             await film_.update({'category': data[a][1], 'rating': 0});
           }
           List<String> dateList = data[a][2].split(',');

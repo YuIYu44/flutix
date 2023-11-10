@@ -120,6 +120,7 @@ class schdp extends State<scheduleplace> {
                                                           setState(() {
                                                             _toggleButtonState(
                                                                 index);
+
                                                             _toggleButtonState_place(
                                                                 6, 9);
                                                           });
@@ -230,36 +231,34 @@ class schdp extends State<scheduleplace> {
                                                                       .size
                                                                       .height *
                                                                   0.01,
-                                                              bottom:
-                                                                  MediaQuery.of(context)
-                                                                          .size
-                                                                          .height *
-                                                                      0.03),
-                                                          height:
-                                                              MediaQuery.of(context)
+                                                              bottom: MediaQuery.of(context)
                                                                       .size
                                                                       .height *
-                                                                  0.06,
+                                                                  0.03),
+                                                          height: MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.06,
                                                           child: FutureBuilder(
                                                               future: show_film(data)
                                                                   .getposts_time(
                                                                       choose_date,
                                                                       index_place),
-                                                              builder:
-                                                                  (BuildContext context,
-                                                                      snapshot) {
-                                                                if (snapshot
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  snapshot2) {
+                                                                if (snapshot2
                                                                         .connectionState ==
                                                                     ConnectionState
                                                                         .done) {
-                                                                  if (snapshot
+                                                                  if (snapshot2
                                                                           .hasData &&
-                                                                      snapshot
+                                                                      snapshot2
                                                                           .data
                                                                           .isNotEmpty) {
                                                                     return ListView.builder(
                                                                         scrollDirection: Axis.horizontal,
-                                                                        itemCount: snapshot.data.length,
+                                                                        itemCount: snapshot2.data.length,
                                                                         itemBuilder: (BuildContext context, int index_time) {
                                                                           return Column(
                                                                               children: [
@@ -267,15 +266,15 @@ class schdp extends State<scheduleplace> {
                                                                                   height: MediaQuery.of(context).size.height * 0.06,
                                                                                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                                                                   child: OutlinedButton(
-                                                                                      onPressed: () {
+                                                                                      onPressed: () async {
                                                                                         final userCubit = BlocProvider.of<films_>(context);
                                                                                         userCubit.addfilms(data);
-
-                                                                                        // userCubit.addschedule([
-                                                                                        //   show.title_(choose_date)[0],
-                                                                                        //   show.title_(choose_date)[index_place + 1][0],
-                                                                                        //   show.title_(choose_date)[index_place + 1][1][index_time].toString()
-                                                                                        // ]);
+                                                                                        List<QueryDocumentSnapshot> snapshot_ = await show_film(data).getposts_date();
+                                                                                        userCubit.adddate(snapshot_[choose_date].id);
+                                                                                        userCubit.addplaceandtime([
+                                                                                          snapshot.data[index_place].id,
+                                                                                          snapshot2.data[index_time].id
+                                                                                        ]);
                                                                                         setState(() {
                                                                                           _toggleButtonState_place(index_place, index_time);
                                                                                         });
@@ -285,7 +284,7 @@ class schdp extends State<scheduleplace> {
                                                                                         side: BorderSide(width: 1.0, color: Color(0xFF4600DC)),
                                                                                       ),
                                                                                       child: Text(
-                                                                                        snapshot.data[index_time].id + ":00",
+                                                                                        snapshot2.data[index_time].id + ":00",
                                                                                         textAlign: TextAlign.center,
                                                                                         style: TextStyle(
                                                                                           color: buttonStates_cinema[index_place][index_time] ? Colors.white : Color(0xFF4600DC),

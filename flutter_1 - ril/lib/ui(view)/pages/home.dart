@@ -337,7 +337,6 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                             ])));
               } else {
                 return Scaffold(
-                  backgroundColor: Colors.white,
                   body: Center(child: CircularProgressIndicator()),
                 );
               }

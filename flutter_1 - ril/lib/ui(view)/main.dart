@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider<user_>(
         create: (context) => user_(),
         child: MaterialApp(
+          theme: ThemeData(scaffoldBackgroundColor: Colors.white),
           home: BlocBuilder<user_, userstate>(
             builder: (context, state) {
               if (state.uservalue[0] != "") {
