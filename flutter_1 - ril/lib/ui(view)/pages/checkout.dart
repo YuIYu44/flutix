@@ -2,37 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/films.dart';
 import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
-import 'package:flutter_1/services/show_film.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'SuccesCheckout.dart';
 
-class checkout extends StatefulWidget {
-  const checkout({super.key});
+class checkout extends StatelessWidget {
+  checkout({super.key});
 
-  @override
-  State<checkout> createState() => _checkoutState();
-}
+  List<String> lists = [
+    "Cinema",
+    "Time",
+    "Date",
+    "Ticket",
+    "Price",
+    "Tax",
+    "Total"
+  ];
+  List<String> button = ["Check Out", "Home Page"];
 
-List<String> lists = [
-  "Cinema",
-  "Time",
-  "Date",
-  "Ticket",
-  "Price",
-  "Tax",
-  "Total"
-];
-List<String> button = ["Check Out", "Home Page"];
-
-class _checkoutState extends State<checkout> {
   int sufficient = 0;
-  final user_cubit = user_();
   @override
   Widget build(BuildContext context) {
-    final userCubit = BlocProvider.of<films_>(context);
+    final filmCubit = BlocProvider.of<films_>(context);
+    final userCubit = BlocProvider.of<user_>(context);
     return FutureBuilder(
-        future: show_film(userCubit.state.uservalue[0]).getposts_weblink(""),
+        future: show_film(filmCubit.state.uservalue[0]).getposts_weblink(""),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData && snapshot.data.isNotEmpty) {
@@ -87,7 +81,7 @@ class _checkoutState extends State<checkout> {
                                       ),
                                       Container(
                                           margin: EdgeInsets.fromLTRB(
-                                              30,
+                                              10,
                                               MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.02,
@@ -95,6 +89,9 @@ class _checkoutState extends State<checkout> {
                                               MediaQuery.sizeOf(context)
                                                       .height *
                                                   0.02),
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.5,
                                           child: Text(
                                             snapshot.data["movie_name"],
                                             style: TextStyle(
@@ -134,7 +131,7 @@ class _checkoutState extends State<checkout> {
                                                           ))),
                                                   Container(
                                                       child: Text(
-                                                          userCubit
+                                                          filmCubit
                                                                   .checkout_val()[
                                                               index],
                                                           style: TextStyle(
@@ -166,7 +163,7 @@ class _checkoutState extends State<checkout> {
                                                     ))),
                                             Container(
                                                 child: Text(
-                                                    userCubit
+                                                    filmCubit
                                                         .checkout_val()[6]
                                                         .toString(),
                                                     style: TextStyle(
@@ -175,55 +172,39 @@ class _checkoutState extends State<checkout> {
                                                     )))
                                           ])),
                                   FutureBuilder(
-                                      future: user_cubit.loadUserValue(),
-                                      builder: (BuildContext context, email) {
-                                        if (email.connectionState ==
+                                      future: UserService.getvalue(
+                                          userCubit.state.uservalue[0]),
+                                      builder: (BuildContext context, balance) {
+                                        if (balance.connectionState ==
                                             ConnectionState.done) {
-                                          return FutureBuilder(
-                                              future: UserService.getvalue(
-                                                  user_cubit
-                                                      .state.uservalue[0]),
-                                              builder: (BuildContext context,
-                                                  balance) {
-                                                if (balance.connectionState ==
-                                                    ConnectionState.done) {
-                                                  if (int.tryParse(
-                                                          balance.data![1])! <
-                                                      userCubit
-                                                          .checkout_val()[6]) {
-                                                    sufficient = 1;
-                                                    return Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                              "Can't Check Out\nYour Wallet Balance is Insufficient",
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'Exo',
-                                                                color: Colors
-                                                                    .red[800],
-                                                              )),
-                                                          Text(
-                                                              "Wallet: ${balance.data![1]}",
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontFamily:
-                                                                    'Exo',
-                                                                color: Colors
-                                                                    .red[800],
-                                                              ))
-                                                        ]);
-                                                  }
-                                                  sufficient = 0;
-                                                }
-                                                return Text("");
-                                              });
+                                          if (int.tryParse(balance.data![1])! <
+                                              filmCubit.checkout_val()[6]) {
+                                            sufficient = 1;
+                                            return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                      "Can't Check Out\nYour Wallet Balance is Insufficient",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontFamily: 'Exo',
+                                                        color: Colors.red[800],
+                                                      )),
+                                                  Text(
+                                                      "Wallet: ${balance.data![1]}",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontFamily: 'Exo',
+                                                        color: Colors.red[800],
+                                                      ))
+                                                ]);
+                                          }
+                                          sufficient = 0;
                                         }
                                         return Text("");
-                                      })
+                                      }),
                                 ],
                               ),
                               Positioned(
@@ -236,16 +217,69 @@ class _checkoutState extends State<checkout> {
                                       Color(0xff4A9DFF),
                                       Color(0xff4A9DFF),
                                       0.76,
-                                      0.35, () {
+                                      0.35, () async {
                                     if (sufficient == 0) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                successcheckout()),
-                                      );
+                                      String dates =
+                                          "dates/${filmCubit.state.uservalue[1]}/cinema/${filmCubit.state.uservalue[2][0]}/time/${filmCubit.state.uservalue[2][1]}";
+                                      Map<String, dynamic>? book =
+                                          await show_film("").getposts_seat(
+                                              filmCubit.state.uservalue[0] +
+                                                  "/" +
+                                                  dates);
+                                      List<dynamic> booked = book!["booked"];
+
+                                      if (await show_film(
+                                                  filmCubit.state.uservalue[0])
+                                              .getposts_exist(dates) ==
+                                          true) {
+                                        if (filmCubit.state.uservalue[3].any(
+                                                (element) =>
+                                                    booked.contains(element)) ==
+                                            false) {
+                                          await show_film(
+                                                  filmCubit.state.uservalue[0])
+                                              .update_seat(dates,
+                                                  filmCubit.state.uservalue[3]);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      successcheckout()));
+                                          await historyService.updatehistory(
+                                              userCubit.state.uservalue[0], [
+                                            filmCubit.state.uservalue[0],
+                                            snapshot.data["link"],
+                                            snapshot.data["movie_name"],
+                                            snapshot.data["category"],
+                                            filmCubit.state.uservalue[1],
+                                            filmCubit.state.uservalue[2][0],
+                                            filmCubit.state.uservalue[2][1],
+                                            filmCubit.state.uservalue[3]
+                                          ]);
+                                          filmCubit.close();
+                                          List balance_val =
+                                              await UserService.getvalue(
+                                                  BlocProvider.of<user_>(
+                                                          context)
+                                                      .state
+                                                      .uservalue[0]);
+
+                                          await AutServices.change(
+                                              userCubit.state.uservalue[0],
+                                              userCubit.state.uservalue[1],
+                                              'balance',
+                                              int.tryParse(balance_val[1])! -
+                                                  filmCubit.checkout_val()[6]);
+                                        } else {
+                                          Navigator.of(context).popUntil(
+                                              ModalRoute.withName('/seat'));
+                                        }
+                                      } else {
+                                        Navigator.of(context).popUntil(
+                                            ModalRoute.withName('/schedule'));
+                                      }
                                     } else {
-                                      userCubit.close();
+                                      filmCubit.close();
                                       Navigator.popUntil(context,
                                           ModalRoute.withName('/home'));
                                     }

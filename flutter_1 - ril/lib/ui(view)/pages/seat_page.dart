@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/films.dart';
-import 'package:flutter_1/services/show_film.dart';
+import 'package:flutter_1/services/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'checkout.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
@@ -20,10 +20,10 @@ class seat_pageState extends State<seat_page> {
   List<Color> kind_color = [Colors.white60, Color(0xFF4600DC), Colors.black54];
   @override
   Widget build(BuildContext context) {
-    final userCubit = BlocProvider.of<films_>(context);
+    final filmCubit = BlocProvider.of<films_>(context);
     return FutureBuilder(
         future: show_film("").getposts_seat(
-            "${userCubit.state.uservalue[0]}/dates/${userCubit.state.uservalue[1]}/cinema/${userCubit.state.uservalue[2][0]}/time/${userCubit.state.uservalue[2][1]}"),
+            "${filmCubit.state.uservalue[0]}/dates/${filmCubit.state.uservalue[1]}/cinema/${filmCubit.state.uservalue[2][0]}/time/${filmCubit.state.uservalue[2][1]}"),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData && snapshot.data.isNotEmpty) {
@@ -319,28 +319,31 @@ class seat_pageState extends State<seat_page> {
                                     if (buttonStates_seat.any((subList) =>
                                         subList
                                             .any((element) => element == 1))) {
-                                      userCubit.addseat(buttonStates_seat);
+                                      filmCubit.addseat(buttonStates_seat);
 
                                       Map<String, dynamic>? snapshot_price =
                                           await show_film(
-                                                  userCubit.state.uservalue[0])
+                                                  filmCubit.state.uservalue[0])
                                               .getposts_weblink("/dates/" +
-                                                  userCubit.state.uservalue[1] +
+                                                  filmCubit.state.uservalue[1] +
                                                   "/cinema/" +
-                                                  userCubit.state.uservalue[2]
+                                                  filmCubit.state.uservalue[2]
                                                       [0]) as Map<String,
                                               dynamic>?;
 
-                                      userCubit
+                                      filmCubit
                                           .addprice(snapshot_price!["price"]);
 
                                       final reload =
                                           await Navigator.of(context).push(
                                         MaterialPageRoute(
-                                            builder: (_2) => BlocProvider.value(
-                                                value: BlocProvider.of<films_>(
-                                                    context),
-                                                child: checkout())),
+                                          builder: (_2) => BlocProvider.value(
+                                              value: BlocProvider.of<films_>(
+                                                  context),
+                                              child: checkout()),
+                                          settings:
+                                              RouteSettings(name: 'checkout'),
+                                        ),
                                       );
                                       if (reload == null) {
                                         setState(() {});

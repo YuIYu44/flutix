@@ -37,15 +37,15 @@ class user_ extends Cubit<userstate> {
     emit(userstate(uservalue: currentState));
   }
 
-  void update_balance(int newBalance) {
-    final currentState = state.uservalue;
-    if (currentState.length < 4) {
-      currentState.add(newBalance.toString());
-    } else {
-      currentState[3] = newBalance.toString();
-    }
-    emit(userstate(uservalue: currentState));
-  }
+  // void update_balance(int newBalance) {
+  //   final currentState = state.uservalue;
+  //   if (currentState.length < 4) {
+  //     currentState.add(newBalance.toString());
+  //   } else {
+  //     currentState[3] = newBalance.toString();
+  //   }
+  //   emit(userstate(uservalue: currentState));
+  // }
 
   void update_name(String newname) async {
     final currentState = state.uservalue;

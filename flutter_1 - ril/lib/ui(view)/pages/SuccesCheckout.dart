@@ -61,8 +61,10 @@ class successcheckout extends StatelessWidget {
                         45,
                         Color(0xff4A9DFF),
                         Color.fromRGBO(255, 255, 255, 1.0), () {
-                      Navigator.popUntil(
-                          context, (Route<dynamic> route) => route.isFirst);
+                      Future.delayed(Duration(seconds: 3), () {
+                        Navigator.popUntil(
+                            context, (Route<dynamic> route) => route.isFirst);
+                      });
                     })),
               ],
             ),

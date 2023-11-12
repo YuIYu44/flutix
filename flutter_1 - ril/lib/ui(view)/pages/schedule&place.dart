@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/films.dart';
-import 'package:flutter_1/services/show_film.dart';
+import 'package:flutter_1/services/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'seat_page.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
+import 'package:intl/intl.dart';
 
 class scheduleplace extends StatefulWidget {
   final String data;
@@ -53,6 +54,7 @@ class schdp extends State<scheduleplace> {
       List.generate(7, (row) => List.generate(10, (col) => false));
   @override
   Widget build(BuildContext context) {
+    DateFormat format = DateFormat('dd-MM-yyyy');
     _toggleButtonState(choose_date);
     return BlocProvider<films_>(
         create: (context) => films_(),
@@ -140,8 +142,12 @@ class schdp extends State<scheduleplace> {
                                                                   0xFF4600DC)),
                                                         ),
                                                         child: Text(
-                                                          snapshot
-                                                              .data[index].id,
+                                                          DateFormat.MMMEd()
+                                                              .format(format
+                                                                  .parse(snapshot
+                                                                      .data[
+                                                                          index]
+                                                                      .id)),
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
@@ -267,11 +273,11 @@ class schdp extends State<scheduleplace> {
                                                                                   margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                                                                   child: OutlinedButton(
                                                                                       onPressed: () async {
-                                                                                        final userCubit = BlocProvider.of<films_>(context);
-                                                                                        userCubit.addfilms(data);
+                                                                                        final filmCubit = BlocProvider.of<films_>(context);
+                                                                                        filmCubit.addfilms(data);
                                                                                         List<QueryDocumentSnapshot> snapshot_ = await show_film(data).getposts_date();
-                                                                                        userCubit.adddate(snapshot_[choose_date].id);
-                                                                                        userCubit.addplaceandtime([
+                                                                                        filmCubit.adddate(snapshot_[choose_date].id);
+                                                                                        filmCubit.addplaceandtime([
                                                                                           snapshot.data[index_place].id,
                                                                                           snapshot2.data[index_time].id
                                                                                         ]);
@@ -284,7 +290,7 @@ class schdp extends State<scheduleplace> {
                                                                                         side: BorderSide(width: 1.0, color: Color(0xFF4600DC)),
                                                                                       ),
                                                                                       child: Text(
-                                                                                        snapshot2.data[index_time].id + ":00",
+                                                                                        snapshot2.data[index_time].id,
                                                                                         textAlign: TextAlign.center,
                                                                                         style: TextStyle(
                                                                                           color: buttonStates_cinema[index_place][index_time] ? Colors.white : Color(0xFF4600DC),
@@ -350,12 +356,13 @@ class schdp extends State<scheduleplace> {
                               });
                               if (buttonStates_cinema
                                   .any((element) => element.contains(true))) {
-                                final reload = await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (_) => BlocProvider.value(
-                                            value: BlocProvider.of<films_>(
-                                                context),
-                                            child: seat_page())));
+                                final reload = await Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                      value: BlocProvider.of<films_>(context),
+                                      child: seat_page()),
+                                  settings: RouteSettings(name: '/seat'),
+                                ));
 
                                 if (reload == false) {
                                   Navigator.pushReplacement(

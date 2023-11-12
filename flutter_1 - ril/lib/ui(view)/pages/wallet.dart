@@ -80,25 +80,37 @@ class Mywallet extends State<wallet> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              BlocConsumer<user_, userstate>(
-                                  listener: (context, state) {},
-                                  builder: (context, state) {
-                                    return Container(
-                                        margin: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.01),
-                                        child: Text(
-                                          state.uservalue[3],
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 30,
-                                            fontFamily: 'Exo',
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ));
+                              FutureBuilder(
+                                  future: UserService.getvalue(
+                                      BlocProvider.of<user_>(context)
+                                          .state
+                                          .uservalue[0]),
+                                  builder: (BuildContext context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      if (snapshot.hasData) {
+                                        return Container(
+                                            margin: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.01),
+                                            child: Text(
+                                              snapshot.data![1],
+                                              textAlign: TextAlign.right,
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 30,
+                                                fontFamily: 'Exo',
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ));
+                                      } else {
+                                        return Text("");
+                                      }
+                                    } else {
+                                      return Text("");
+                                    }
                                   })
                             ])),
                   ),
@@ -159,40 +171,37 @@ class Mywallet extends State<wallet> {
                               ],
                             );
                           }))),
-                  BlocConsumer<user_, userstate>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return Container(
-                            margin: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.6,
-                                MediaQuery.of(context).size.height * 0.1,
-                                0,
-                                0),
-                            child: buttonblue(
-                                context,
-                                "Top Up",
-                                Color(0xffffffff),
-                                Color(0xff4A9DFF),
-                                Color(0xff4A9DFF),
-                                0,
-                                0.4, () {
-                              int balance = categories[buttonStates
-                                  .indexWhere((value) => value == true)];
-                              AutServices.change(
-                                  state.uservalue[0],
-                                  state.uservalue[1],
-                                  'balance',
-                                  int.tryParse(state.uservalue[3])! + balance);
-                              final userCubit = BlocProvider.of<user_>(context);
-                              userCubit.update_balance(
-                                  int.tryParse(state.uservalue[3])! + balance);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => succestopup()),
-                              );
-                            }));
-                      }),
+                  Container(
+                      margin: EdgeInsets.fromLTRB(
+                          MediaQuery.of(context).size.width * 0.6,
+                          MediaQuery.of(context).size.height * 0.1,
+                          0,
+                          0),
+                      child: buttonblue(
+                          context,
+                          "Top Up",
+                          Color(0xffffffff),
+                          Color(0xff4A9DFF),
+                          Color(0xff4A9DFF),
+                          0,
+                          0.4, () async {
+                        int balance = categories[
+                            buttonStates.indexWhere((value) => value == true)];
+                        List balance_val = await UserService.getvalue(
+                            BlocProvider.of<user_>(context).state.uservalue[0]);
+                        String balance_value = await balance_val[1];
+                        await AutServices.change(
+                            BlocProvider.of<user_>(context).state.uservalue[0],
+                            BlocProvider.of<user_>(context).state.uservalue[1],
+                            'balance',
+                            int.tryParse(balance_value)! + balance);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => succestopup()),
+                        );
+                      })),
                 ],
               ),
             )));

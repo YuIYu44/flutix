@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/services/show_film.dart';
+import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/pages/schedule&place.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 
@@ -73,13 +73,14 @@ class movie_detail extends StatelessWidget {
                               children: [
                                 Row(children: [
                                   Text(
-                                    snapshot.data['rating'].toString() + "   ",
+                                    snapshot.data['rating'][0].toString() +
+                                        "   ",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 16,
+                                      fontSize: 17,
                                       fontFamily: 'Exo',
-                                      fontWeight: FontWeight.normal,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                   Icon(
@@ -188,31 +189,41 @@ class movie_detail extends StatelessWidget {
                                                 ),
                                               ]));
                                     })),
-                            Container(
-                                margin: EdgeInsets.only(
-                                  left: MediaQuery.of(context).size.width * 0.3,
-                                ),
-                                child: buttonblue(
-                                    context,
-                                    "Book",
-                                    Color(0xffffffff),
-                                    Color(0xff4A9DFF),
-                                    Color(0xff4A9DFF),
-                                    0,
-                                    0.32, () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
+                            if (snapshot.data['available'] == 1)
+                              Container(
+                                  margin: EdgeInsets.only(
+                                    left:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                  ),
+                                  child: buttonblue(
+                                      context,
+                                      "Book",
+                                      Color(0xffffffff),
+                                      Color(0xff4A9DFF),
+                                      Color(0xff4A9DFF),
+                                      0,
+                                      0.32, () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
                                         builder: (context) =>
-                                            scheduleplace(data: data)),
-                                  );
-                                })),
+                                            scheduleplace(data: data),
+                                        settings:
+                                            RouteSettings(name: '/schedule'),
+                                      ),
+                                    );
+                                  })),
                           ]),
                     )),
               ),
             );
           } else {
-            return Center(child: Text('No data available.'));
+            return Center(
+                child: Text(
+              "I'm Sorry But It Seems That Your Movie Is Not Available",
+              style: TextStyle(fontSize: 20, color: Colors.white),
+              textAlign: TextAlign.center,
+            ));
           }
         } else {
           return Scaffold(

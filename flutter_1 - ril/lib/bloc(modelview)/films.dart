@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:intl/intl.dart';
 part "film_state.dart";
 
 class films_ extends Cubit<filmstate> {
@@ -58,7 +59,8 @@ class films_ extends Cubit<filmstate> {
     return [
       currentState[2][0],
       currentState[2][1],
-      currentState[1],
+      DateFormat.MMMEd()
+          .format(DateFormat('dd-mm-yyyy').parse(currentState[1])),
       currentState[3].length < 6
           ? currentState[3].toString().replaceAll("[", "").replaceAll("]", "")
           : currentState[3]

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/user_.dart';
-import 'package:flutter_1/services/push_film.dart';
 import 'package:flutter_1/services/services.dart';
-import 'package:flutter_1/services/show_film.dart';
 import 'package:flutter_1/ui(view)/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'changeprofile.dart';
 import 'movie_detail.dart';
@@ -49,7 +48,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
 
   void _onRefresh() async {
     setState(() {
-      films = Storage();
+      futureschedule = films.up_file_firebase();
     });
     _refreshController.refreshCompleted();
   }
@@ -201,8 +200,12 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                                     .data()['category'] !=
                                                 null) {
                                               if (snapshot.data[index]
-                                                  .data()['category']
-                                                  .contains(category_choosen)) {
+                                                      .data()['category']
+                                                      .contains(
+                                                          category_choosen) &&
+                                                  snapshot.data[index].data()[
+                                                          'available'] ==
+                                                      1) {
                                                 return Container(
                                                   margin: EdgeInsets.fromLTRB(
                                                       10, 0, 10, 0),
@@ -219,14 +222,15 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                                   ),
                                                   child: OutlinedButton(
                                                     onPressed: () async {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  movie_detail(
-                                                                      data: snapshot
-                                                                          .data[
-                                                                              index]
-                                                                          .id)));
+                                                      Navigator.of(context)
+                                                          .push(
+                                                              MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            movie_detail(
+                                                                data: snapshot
+                                                                    .data[index]
+                                                                    .id),
+                                                      ));
                                                     },
                                                     child: Text(''),
                                                   ),
@@ -345,177 +349,350 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
 
   @override
   Widget ticket_new(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.01,
-                bottom: MediaQuery.of(context).size.height * 0.02),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: 6,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: OutlinedButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    ticketdetail(previousPageName: "new")));
-                          },
-                          child: Row(children: [
+    return FutureBuilder(
+        future: historyService
+            .gethistory(BlocProvider.of<user_>(context).state.uservalue[0]),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SingleChildScrollView(
+                child: Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.01,
+                        bottom: MediaQuery.of(context).size.height * 0.02),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(children: [
                             Container(
-                                color: Colors.black,
-                                margin: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height *
-                                        0.005,
-                                    right: MediaQuery.of(context).size.width *
-                                        0.03),
-                                width: MediaQuery.of(context).size.width * 0.3,
-                                height:
-                                    MediaQuery.of(context).size.width * 0.2),
-                            Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "The Movie Name",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.05,
-                                      fontFamily: 'Exo',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  Text(
-                                    "09:00",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
-                                      fontFamily: 'Exo',
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Hari, Tanggal bulan",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
-                                      fontFamily: 'Exo',
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                  Text(
-                                    "The Cinema Name",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.035,
-                                      fontFamily: 'Exo',
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ])
-                          ])),
-                    )
-                  ]);
-                })));
+                                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: FutureBuilder(
+                                    future: historyService.gethistory_info(
+                                        BlocProvider.of<user_>(context)
+                                            .state
+                                            .uservalue[0],
+                                        snapshot.data[index].id),
+                                    builder:
+                                        (BuildContext context, snapshot_info) {
+                                      if (snapshot_info.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot_info.data != null) {
+                                        if (DateUtils.dateOnly(
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .parse(snapshot_info
+                                                            .data['date']))
+                                                .isAfter(DateUtils.dateOnly(
+                                                    DateTime.now())) ||
+                                            DateUtils.dateOnly(
+                                                    DateFormat('dd-MM-yyyy')
+                                                        .parse(snapshot_info
+                                                            .data['date']))
+                                                .isAtSameMomentAs(
+                                                    DateTime.now())) {
+                                          return Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 10),
+                                              child: OutlinedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TicketDetail(
+                                                                    previousPage:
+                                                                        "new",
+                                                                    id: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .id)));
+                                                  },
+                                                  child: Row(children: [
+                                                    Container(
+                                                      child: Image.network(
+                                                        snapshot_info.data[
+                                                            "link_picture"],
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      margin: EdgeInsets.only(
+                                                          right: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03),
+                                                      width: 125,
+                                                      height: 190,
+                                                    ),
+                                                    Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SizedBox(
+                                                              width: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Text(
+                                                                snapshot_info
+                                                                        .data[
+                                                                    "name"],
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 23,
+                                                                  fontFamily:
+                                                                      'Exo',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                ),
+                                                              )),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 10)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["time"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 5)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["date"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 5)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["cinema"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 19,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                        ])
+                                                  ])));
+                                        } else {
+                                          return Container();
+                                        }
+                                      }
+                                      return Container(
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    })),
+                          ]);
+                        })));
+          } else {
+            return Container(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+        });
   }
 
   Widget ticket_old(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            margin: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.01,
-                bottom: MediaQuery.of(context).size.height * 0.02),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.7,
-            child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: 6,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(children: [
-                    Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      ticketdetail(previousPageName: "Old")));
-                            },
-                            child: Row(children: [
-                              Container(
-                                  color: Colors.black,
-                                  margin: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.height *
-                                          0.005,
-                                      right: MediaQuery.of(context).size.width *
-                                          0.03),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  height:
-                                      MediaQuery.of(context).size.width * 0.2),
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "The Movie Name",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width *
-                                                0.05,
-                                        fontFamily: 'Exo',
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    Text(
-                                      "09:00",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width *
-                                                0.03,
-                                        fontFamily: 'Exo',
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Hari, Tanggal bulan",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width *
-                                                0.03,
-                                        fontFamily: 'Exo',
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                    Text(
-                                      "The Cinema Name",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize:
-                                            MediaQuery.of(context).size.width *
-                                                0.035,
-                                        fontFamily: 'Exo',
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ]),
-                            ])))
-                  ]);
-                })));
+    return FutureBuilder(
+        future: historyService
+            .gethistory(BlocProvider.of<user_>(context).state.uservalue[0]),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return SingleChildScrollView(
+                child: Container(
+                    margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.01,
+                        bottom: MediaQuery.of(context).size.height * 0.02),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Column(children: [
+                            Container(
+                                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: FutureBuilder(
+                                    future: historyService.gethistory_info(
+                                        BlocProvider.of<user_>(context)
+                                            .state
+                                            .uservalue[0],
+                                        snapshot.data[index].id),
+                                    builder:
+                                        (BuildContext context, snapshot_info) {
+                                      if (snapshot_info.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot_info.data != null) {
+                                        if (DateUtils.dateOnly(
+                                                DateFormat('dd-MM-yyyy').parse(
+                                                    snapshot_info.data['date']))
+                                            .isBefore(DateUtils.dateOnly(
+                                                DateTime.now()))) {
+                                          return Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 10),
+                                              child: OutlinedButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                TicketDetail(
+                                                                    previousPage:
+                                                                        "old",
+                                                                    id: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .id)));
+                                                  },
+                                                  child: Row(children: [
+                                                    Container(
+                                                      child: Image.network(
+                                                        snapshot_info.data[
+                                                            "link_picture"],
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                      margin: EdgeInsets.only(
+                                                          right: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03),
+                                                      width: 125,
+                                                      height: 190,
+                                                    ),
+                                                    Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SizedBox(
+                                                              width: MediaQuery
+                                                                          .sizeOf(
+                                                                              context)
+                                                                      .width *
+                                                                  0.6,
+                                                              child: Text(
+                                                                snapshot_info
+                                                                        .data[
+                                                                    "name"],
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 23,
+                                                                  fontFamily:
+                                                                      'Exo',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                ),
+                                                              )),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 10)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["time"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 5)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["date"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 18,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 5)),
+                                                          Text(
+                                                            snapshot_info
+                                                                .data["cinema"],
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontSize: 19,
+                                                              fontFamily: 'Exo',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal,
+                                                            ),
+                                                          ),
+                                                        ])
+                                                  ])));
+                                        } else {
+                                          return Container();
+                                        }
+                                      }
+                                      return Container(
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      );
+                                    })),
+                          ]);
+                        })));
+          } else {
+            return Container(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+        });
   }
 
   Widget myticket(BuildContext context) {
@@ -655,7 +832,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                     await UserService.getvalue(userCubit.state.uservalue[0]);
                 setState(() {
                   userCubit.update_name(_balance_name[0]);
-                  userCubit.update_balance(int.tryParse(_balance_name[1])!);
+
                   _index = index;
                 });
               }
