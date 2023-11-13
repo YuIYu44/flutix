@@ -18,9 +18,9 @@ class checkout extends StatelessWidget {
     "Tax",
     "Total"
   ];
-  List<String> button = ["Check Out", "Home Page"];
+  List<String> button = ["Home Page", "Check Out"];
 
-  int sufficient = 0;
+  int sufficient = 1;
   @override
   Widget build(BuildContext context) {
     final filmCubit = BlocProvider.of<films_>(context);
@@ -177,113 +177,163 @@ class checkout extends StatelessWidget {
                                       builder: (BuildContext context, balance) {
                                         if (balance.connectionState ==
                                             ConnectionState.done) {
-                                          if (int.tryParse(balance.data![1])! <
-                                              filmCubit.checkout_val()[6]) {
-                                            sufficient = 1;
-                                            return Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                      "Can't Check Out\nYour Wallet Balance is Insufficient",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontFamily: 'Exo',
-                                                        color: Colors.red[800],
-                                                      )),
-                                                  Text(
-                                                      "Wallet: ${balance.data![1]}",
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontFamily: 'Exo',
-                                                        color: Colors.red[800],
-                                                      ))
-                                                ]);
-                                          }
-                                          sufficient = 0;
+                                          sufficient =
+                                              int.tryParse(balance.data![1])! <
+                                                      filmCubit
+                                                          .checkout_val()[6]
+                                                  ? 0
+                                                  : 1;
+
+                                          return Column(children: [
+                                            if (sufficient == 0)
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                        "Can't Check Out\nYour Wallet Balance is Insufficient",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontFamily: 'Exo',
+                                                          color:
+                                                              Colors.red[800],
+                                                        )),
+                                                    Text(
+                                                        "Wallet: ${balance.data![1]}",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontFamily: 'Exo',
+                                                          color:
+                                                              Colors.red[800],
+                                                        ))
+                                                  ]),
+                                            Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        0.5,
+                                                    0,
+                                                    0,
+                                                    MediaQuery.sizeOf(context)
+                                                            .height *
+                                                        0.01),
+                                                child: buttonblue(
+                                                    context,
+                                                    button[sufficient],
+                                                    Color(0xffffffff),
+                                                    Color(0xff4A9DFF),
+                                                    Color(0xff4A9DFF),
+                                                    0.07,
+                                                    0.35, () async {
+                                                  if (sufficient == 1) {
+                                                    String dates =
+                                                        "dates/${filmCubit.state.uservalue[1]}/cinema/${filmCubit.state.uservalue[2][0]}/time/${filmCubit.state.uservalue[2][1]}";
+                                                    Map<String, dynamic>? book =
+                                                        await show_film("")
+                                                            .getposts_seat(filmCubit
+                                                                    .state
+                                                                    .uservalue[0] +
+                                                                "/" +
+                                                                dates);
+                                                    List<dynamic> booked =
+                                                        book!["booked"];
+
+                                                    if (await show_film(filmCubit
+                                                                .state
+                                                                .uservalue[0])
+                                                            .getposts_exist(
+                                                                dates) ==
+                                                        true) {
+                                                      if (filmCubit.state
+                                                              .uservalue[3]
+                                                              .any((element) =>
+                                                                  booked.contains(
+                                                                      element)) ==
+                                                          false) {
+                                                        await show_film(filmCubit
+                                                                .state
+                                                                .uservalue[0])
+                                                            .update_seat(
+                                                                dates,
+                                                                filmCubit.state
+                                                                    .uservalue[3]);
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        successcheckout()));
+                                                        await historyService
+                                                            .updatehistory(
+                                                                userCubit.state
+                                                                    .uservalue[0],
+                                                                [
+                                                              filmCubit.state
+                                                                  .uservalue[0],
+                                                              snapshot
+                                                                  .data["link"],
+                                                              snapshot.data[
+                                                                  "movie_name"],
+                                                              snapshot.data[
+                                                                  "category"],
+                                                              filmCubit.state
+                                                                  .uservalue[1],
+                                                              filmCubit.state
+                                                                      .uservalue[
+                                                                  2][0],
+                                                              filmCubit.state
+                                                                      .uservalue[
+                                                                  2][1],
+                                                              filmCubit.state
+                                                                  .uservalue[3]
+                                                            ]);
+                                                        filmCubit.close();
+                                                        List balance_val =
+                                                            await UserService.getvalue(
+                                                                BlocProvider.of<
+                                                                            user_>(
+                                                                        context)
+                                                                    .state
+                                                                    .uservalue[0]);
+
+                                                        await AutServices.change(
+                                                            userCubit.state
+                                                                .uservalue[0],
+                                                            userCubit.state
+                                                                .uservalue[1],
+                                                            'balance',
+                                                            int.tryParse(
+                                                                    balance_val[
+                                                                        1])! -
+                                                                filmCubit
+                                                                    .checkout_val()[6]);
+                                                      } else {
+                                                        Navigator.of(context)
+                                                            .popUntil(ModalRoute
+                                                                .withName(
+                                                                    '/seat'));
+                                                      }
+                                                    } else {
+                                                      Navigator.of(context)
+                                                          .popUntil(ModalRoute
+                                                              .withName(
+                                                                  '/schedule'));
+                                                    }
+                                                  } else {
+                                                    filmCubit.close();
+                                                    Navigator.of(context)
+                                                        .popUntil((route) =>
+                                                            route.isFirst);
+                                                  }
+                                                })),
+                                          ]);
                                         }
+
                                         return Text("");
                                       }),
                                 ],
                               ),
-                              Positioned(
-                                  left:
-                                      MediaQuery.of(context).size.width * 0.55,
-                                  child: buttonblue(
-                                      context,
-                                      button[sufficient],
-                                      Color(0xffffffff),
-                                      Color(0xff4A9DFF),
-                                      Color(0xff4A9DFF),
-                                      0.76,
-                                      0.35, () async {
-                                    if (sufficient == 0) {
-                                      String dates =
-                                          "dates/${filmCubit.state.uservalue[1]}/cinema/${filmCubit.state.uservalue[2][0]}/time/${filmCubit.state.uservalue[2][1]}";
-                                      Map<String, dynamic>? book =
-                                          await show_film("").getposts_seat(
-                                              filmCubit.state.uservalue[0] +
-                                                  "/" +
-                                                  dates);
-                                      List<dynamic> booked = book!["booked"];
-
-                                      if (await show_film(
-                                                  filmCubit.state.uservalue[0])
-                                              .getposts_exist(dates) ==
-                                          true) {
-                                        if (filmCubit.state.uservalue[3].any(
-                                                (element) =>
-                                                    booked.contains(element)) ==
-                                            false) {
-                                          await show_film(
-                                                  filmCubit.state.uservalue[0])
-                                              .update_seat(dates,
-                                                  filmCubit.state.uservalue[3]);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      successcheckout()));
-                                          await historyService.updatehistory(
-                                              userCubit.state.uservalue[0], [
-                                            filmCubit.state.uservalue[0],
-                                            snapshot.data["link"],
-                                            snapshot.data["movie_name"],
-                                            snapshot.data["category"],
-                                            filmCubit.state.uservalue[1],
-                                            filmCubit.state.uservalue[2][0],
-                                            filmCubit.state.uservalue[2][1],
-                                            filmCubit.state.uservalue[3]
-                                          ]);
-                                          filmCubit.close();
-                                          List balance_val =
-                                              await UserService.getvalue(
-                                                  BlocProvider.of<user_>(
-                                                          context)
-                                                      .state
-                                                      .uservalue[0]);
-
-                                          await AutServices.change(
-                                              userCubit.state.uservalue[0],
-                                              userCubit.state.uservalue[1],
-                                              'balance',
-                                              int.tryParse(balance_val[1])! -
-                                                  filmCubit.checkout_val()[6]);
-                                        } else {
-                                          Navigator.of(context).popUntil(
-                                              ModalRoute.withName('/seat'));
-                                        }
-                                      } else {
-                                        Navigator.of(context).popUntil(
-                                            ModalRoute.withName('/schedule'));
-                                      }
-                                    } else {
-                                      filmCubit.close();
-                                      Navigator.popUntil(context,
-                                          ModalRoute.withName('/home'));
-                                    }
-                                  })),
                             ],
                           ))));
             } else {

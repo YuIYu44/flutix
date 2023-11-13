@@ -7,13 +7,6 @@ class show_film {
   show_film(datas) {
     website_link = datas;
   }
-  //show_film(userCubit.state.uservalue[0]).getposts_weblink().data['link'];
-  // Future getone_docs(where, value) async {
-  //   DocumentSnapshot qn =
-  //       await firestore.doc("films/film/name/${website_link}${where}").get();
-  //   Map<String, dynamic>? data = await qn.data() as Map<String, dynamic>?;
-  //   return data![value];
-  // }
 
   Future getposts(kind) async {
     var firestore = FirebaseFirestore.instance;
@@ -56,33 +49,4 @@ class show_film {
         await firestore.doc("films/film/name/${inside}").get();
     return qn.data();
   }
-
-  // Future<List<dynamic>> getvalue(childs) async {
-  //   final all = await ref.child('film').child(website_link).child(childs).get();
-  //   Map<dynamic, dynamic> all_ = all.value as Map<dynamic, dynamic>;
-  //   return all_.keys.toList();
-  // }
-
-  // Future<List<List<int>>> show_seat(thechoosen, chooseseat) async {
-  //   final ref = FirebaseDatabase.instance.ref();
-  //   final seat = await ref.child('film/' + thechoosen + "/seat").get();
-
-  //   List<List<int>> seat_list = chooseseat;
-  //   if (seat.value != 0) {
-  //     List<String> seat_alphabet = ["A", "B", "C", "D", "E", "F"];
-
-  //     Map<dynamic, dynamic> seats = seat.value as Map<dynamic, dynamic>;
-  //     List<dynamic> seat_ = seats.values.toList() as List<dynamic>;
-  //     for (int i = 0; i < seat_.length; i++) {
-  //       int index_alphabet = seat_alphabet
-  //           .indexWhere((alphabet) => alphabet == seat_[i][0].toString());
-  //       seat_list[index_alphabet][int.tryParse(seat_[i][1])! - 1] = 2;
-  //     }
-  //   } else if (seat.value == null) {
-  //     return [
-  //       [0]
-  //     ];
-  //   }
-  //   return seat_list;
-  // }
 }

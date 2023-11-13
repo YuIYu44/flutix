@@ -39,7 +39,6 @@ class succestopup extends StatelessWidget {
                     child: customButton(
                         context,
                         'My Wallet',
-                        0,
                         140,
                         45,
                         Color(0xff4A9DFF),
@@ -54,13 +53,11 @@ class succestopup extends StatelessWidget {
                     child: customButton(
                         context,
                         'Home',
-                        0,
                         140,
                         45,
                         Color.fromRGBO(255, 255, 255, 1.0),
                         Color(0xff4A9DFF), () {
-                      Navigator.of(context)
-                          .popUntil(ModalRoute.withName('/home'));
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     })),
               ],
             ),

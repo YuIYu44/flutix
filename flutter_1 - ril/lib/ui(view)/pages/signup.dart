@@ -20,69 +20,43 @@ class _signup extends State<signup> {
             child: SizedBox(
           width: MediaQuery.sizeOf(context).width,
           height: MediaQuery.sizeOf(context).height,
-          child: Stack(
-            alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.05,
+              Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.05),
                 child: Image.asset(
                   'asset/sign_up.png',
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.2,
                 ),
               ),
-              texts_bubble(
-                  context,
-                  'Sign Up',
-                  30.0,
-                  MediaQuery.of(context).size.height * 0.3,
-                  0,
-                  0,
-                  0,
-                  Color.fromRGBO(0, 0, 0, 1.0),
-                  TextAlign.center),
-              textfields(
-                  context,
-                  emailController,
-                  false,
-                  'Email',
-                  MediaQuery.of(context).size.height * 0.4,
-                  14,
-                  Colors.black,
-                  FontWeight.bold),
-              textfields(
-                  context,
-                  usernameController,
-                  false,
-                  'Username',
-                  MediaQuery.of(context).size.height * 0.48,
-                  14,
-                  Colors.black,
-                  FontWeight.bold),
-              textfields(
-                  context,
-                  passwordController,
-                  true,
-                  'Password',
-                  MediaQuery.of(context).size.height * 0.56,
-                  14,
-                  Colors.black,
-                  FontWeight.bold),
-              texts_exo(
-                  context,
-                  error,
-                  13,
-                  MediaQuery.of(context).size.height * 0.65,
-                  0,
-                  MediaQuery.of(context).size.width * 0.16,
-                  MediaQuery.of(context).size.width * 0.13,
-                  Colors.red,
-                  TextAlign.left,
-                  FontWeight.bold),
+              texts_bubble(context, 'Sign Up', 40.0, 0, 0.03, 0, 0,
+                  Color.fromRGBO(0, 0, 0, 1.0), TextAlign.center),
+              Container(
+                  width: MediaQuery.sizeOf(context).width * 0.8,
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.04),
+                  child: textfields(context, emailController, false, 'Email', 0,
+                      14, Colors.black, FontWeight.bold)),
+              Container(
+                  width: MediaQuery.sizeOf(context).width * 0.8,
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.02),
+                  child: textfields(context, usernameController, false,
+                      'Username', 0, 14, Colors.black, FontWeight.bold)),
+              Container(
+                  width: MediaQuery.sizeOf(context).width * 0.8,
+                  margin: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.02),
+                  child: textfields(context, passwordController, true,
+                      'Password', 0, 14, Colors.black, FontWeight.bold)),
+              texts_exo(context, error, 13, 0.05, 0.1, 0.15, 0.15, Colors.red,
+                  TextAlign.left, FontWeight.bold),
               customButton(
                   context,
                   'Create An Account',
-                  MediaQuery.of(context).size.height * 0.82,
                   MediaQuery.of(context).size.width * 0.7,
                   45,
                   Color(0xff4A9DFF),
@@ -98,9 +72,9 @@ class _signup extends State<signup> {
                   }
                 });
               }),
-              Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.07,
-                left: MediaQuery.of(context).size.width * 0.15,
+              Container(
+                margin: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.02),
                 child: GestureDetector(
                   onTap: () {
                     Navigator.pushReplacement(

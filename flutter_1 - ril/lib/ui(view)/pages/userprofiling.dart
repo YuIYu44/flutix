@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
-import 'package:flutter_1/ui(view)/main.dart';
+import 'package:flutter_1/main.dart';
+import 'package:flutter_1/ui(view)/pages/succespage.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -139,10 +140,10 @@ class checklistspage extends State<userprofiling> {
                                   'selectedGenres',
                                   result);
                               if (genreadd == "") {
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => MyApp()),
-                                    (Route<dynamic> route) => false);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            succespage(state.uservalue[0])));
                               }
                             }
                           }),

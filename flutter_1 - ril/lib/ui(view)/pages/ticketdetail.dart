@@ -31,7 +31,7 @@ class TicketDetail extends StatelessWidget {
                 },
                 child: Scaffold(
                   appBar: barflutix(context),
-                  body: Stack(
+                  body: Column(
                     children: [
                       Padding(
                           padding: customEdgeInsets(context),
@@ -207,9 +207,10 @@ class TicketDetail extends StatelessWidget {
                                     ])),
                           ])),
                       if (previousPage == "new")
-                        Positioned(
-                          top: MediaQuery.of(context).size.height * 0.65,
-                          left: MediaQuery.of(context).size.width * 0.55,
+                        Container(
+                          margin: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).size.height * 0.05,
+                              left: MediaQuery.of(context).size.width * 0.58),
                           child: Container(
                             width: 150,
                             height: 150,

@@ -56,7 +56,6 @@ class successcheckout extends StatelessWidget {
                     child: customButton(
                         context,
                         'Home',
-                        0,
                         140,
                         45,
                         Color(0xff4A9DFF),

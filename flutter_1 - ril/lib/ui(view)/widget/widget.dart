@@ -5,32 +5,28 @@ import 'package:google_fonts/google_fonts.dart';
 Widget customButton(
   BuildContext context,
   String text,
-  double top,
   double width,
   double height,
   Color buttonColor,
   Color textColor,
   VoidCallback onPressed,
 ) {
-  return Positioned(
-    top: top,
-    child: Container(
-      width: width,
-      height: height,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          primary: buttonColor,
-        ),
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: textColor,
-            fontSize: 14,
-            fontFamily: 'Exo',
-            fontWeight: FontWeight.w700,
-          ),
+  return Container(
+    width: width,
+    height: height,
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        primary: buttonColor,
+      ),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 14,
+          fontFamily: 'Exo',
+          fontWeight: FontWeight.w700,
         ),
       ),
     ),
@@ -72,11 +68,12 @@ Widget texts_bubble(
   Color textColor,
   TextAlign align,
 ) {
-  return Positioned(
-    top: top,
-    left: left,
-    right: right,
-    bottom: bottom,
+  return Container(
+    margin: EdgeInsets.fromLTRB(
+        MediaQuery.sizeOf(context).width * left,
+        MediaQuery.sizeOf(context).height * top,
+        MediaQuery.sizeOf(context).width * right,
+        MediaQuery.sizeOf(context).height * bottom),
     child: Text(
       text,
       textAlign: align,
@@ -100,11 +97,12 @@ Widget texts_exo(
   TextAlign align,
   FontWeight fontweight,
 ) {
-  return Positioned(
-    top: top,
-    left: left,
-    right: right,
-    bottom: bottom,
+  return Container(
+    margin: EdgeInsets.fromLTRB(
+        MediaQuery.sizeOf(context).width * left,
+        MediaQuery.sizeOf(context).height * top,
+        MediaQuery.sizeOf(context).width * right,
+        MediaQuery.sizeOf(context).height * bottom),
     child: Text(
       text,
       textAlign: align,
@@ -128,11 +126,9 @@ Widget textfields(
   Color textColor,
   FontWeight fontweight,
 ) {
-  return Positioned(
-    top: top,
-    bottom: 0,
-    left: MediaQuery.of(context).size.width * 0.15,
-    right: MediaQuery.of(context).size.width * 0.15,
+  return Container(
+    margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width * 0.05, top,
+        MediaQuery.of(context).size.width * 0.05, 0),
     child: TextField(
       controller: controllers,
       obscureText: obscure,

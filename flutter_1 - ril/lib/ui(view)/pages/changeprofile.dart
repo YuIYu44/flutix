@@ -27,6 +27,8 @@ class _changeprofile extends State<changeprofile> {
               child: Padding(
                 padding: customEdgeInsets(context),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       margin: EdgeInsets.only(
@@ -37,72 +39,50 @@ class _changeprofile extends State<changeprofile> {
                       }),
                     ),
                     Container(
-                        margin: EdgeInsets.only(
-                            top: 70,
-                            right: MediaQuery.of(context).size.width * 0.1),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: textfields(
-                            context,
-                            emailController,
-                            false,
-                            'Email',
-                            MediaQuery.of(context).size.height * 0.58,
-                            16,
-                            Colors.black,
-                            FontWeight.bold)),
+                        margin: EdgeInsets.only(top: 70),
+                        width: MediaQuery.sizeOf(context).width * 0.8,
+                        child: textfields(context, emailController, false,
+                            'Email', 0, 16, Colors.black, FontWeight.bold)),
                     Container(
-                        margin: EdgeInsets.only(
-                            top: 40,
-                            right: MediaQuery.of(context).size.width * 0.1),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: textfields(
-                            context,
-                            usernameController,
-                            false,
-                            'Username',
-                            MediaQuery.of(context).size.height * 0.58,
-                            16,
-                            Colors.black,
-                            FontWeight.bold)),
+                        margin: EdgeInsets.only(top: 40),
+                        width: MediaQuery.sizeOf(context).width * 0.8,
+                        child: textfields(context, usernameController, false,
+                            'Username', 0, 16, Colors.black, FontWeight.bold)),
                     Container(
-                        margin: EdgeInsets.only(
-                            top: 40,
-                            right: MediaQuery.of(context).size.width * 0.1),
-                        width: MediaQuery.of(context).size.width * 0.7,
+                        margin: EdgeInsets.only(top: 40),
+                        width: MediaQuery.sizeOf(context).width * 0.8,
                         child: textfields(
                             context,
                             oldpasswordController,
                             true,
                             'Old Password',
-                            MediaQuery.of(context).size.height * 0.58,
+                            0,
                             16,
                             Colors.black,
                             FontWeight.bold)),
                     Container(
                         margin: EdgeInsets.only(
-                            top: 40,
-                            right: MediaQuery.of(context).size.width * 0.1),
-                        width: MediaQuery.of(context).size.width * 0.7,
+                          top: 40,
+                        ),
+                        width: MediaQuery.sizeOf(context).width * 0.8,
                         child: textfields(
                             context,
                             newpasswordController,
                             true,
                             'New Password',
-                            MediaQuery.of(context).size.height * 0.58,
+                            0,
                             16,
                             Colors.black,
                             FontWeight.bold)),
                     Container(
-                        margin: EdgeInsets.only(
-                            top: 30,
-                            right: MediaQuery.of(context).size.width * 0.1),
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: texts_exo(context, error, 16, 0, 0, 0, 0,
+                        margin: EdgeInsets.only(top: 30),
+                        width: MediaQuery.sizeOf(context).width * 0.8,
+                        child: texts_exo(context, error, 16, 0, 0, 0.05, 0,
                             Colors.red, TextAlign.left, FontWeight.w800)),
                     Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.1,
-                          right: MediaQuery.of(context).size.width * 0.55),
+                          left: MediaQuery.of(context).size.width * 0.05),
                       child: buttonblue(
                           context,
                           "Change",
@@ -110,7 +90,7 @@ class _changeprofile extends State<changeprofile> {
                           Color(0xff4A9DFF),
                           Color(0xff4A9DFF),
                           0,
-                          0.25, () async {
+                          0.3, () async {
                         String check = await AutServices.changePassword(
                             emailController.text,
                             usernameController.text,

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
-import 'package:flutter_1/ui(view)/main.dart';
+import 'package:flutter_1/main.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -98,10 +98,10 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                       TextAlign.left,
                                       FontWeight.w800)),
                               GridView.count(
-                                  childAspectRatio:
-                                      MediaQuery.of(context).size.width /
-                                          (MediaQuery.of(context).size.height /
-                                              4.5),
+                                  childAspectRatio: MediaQuery.of(context)
+                                          .size
+                                          .width /
+                                      (MediaQuery.of(context).size.height / 5),
                                   shrinkWrap: true,
                                   crossAxisCount: 4,
                                   physics: const NeverScrollableScrollPhysics(),
@@ -111,53 +111,54 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                       children: [
                                         FittedBox(
                                           child: OutlinedButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                if (_toggleButtonState(index)) {
-                                                  category_choosen =
-                                                      category[index];
-                                                } else {
-                                                  category_choosen = "";
-                                                }
-                                              });
-                                            },
-                                            style: OutlinedButton.styleFrom(
-                                              padding: EdgeInsets.fromLTRB(
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.02,
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.01,
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.02,
-                                                MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.01,
+                                              onPressed: () {
+                                                setState(() {
+                                                  if (_toggleButtonState(
+                                                      index)) {
+                                                    category_choosen =
+                                                        category[index];
+                                                  } else {
+                                                    category_choosen = "";
+                                                  }
+                                                });
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                padding: EdgeInsets.fromLTRB(
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.02,
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.01,
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.02,
+                                                  MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.01,
+                                                ),
+                                                backgroundColor:
+                                                    buttonStates[index]
+                                                        ? Color(0xFF4600DC)
+                                                        : Colors.white,
                                               ),
-                                              backgroundColor:
+                                              child: texts_exo(
+                                                  context,
+                                                  category[index],
+                                                  15,
+                                                  0,
+                                                  0,
+                                                  0,
+                                                  0,
                                                   buttonStates[index]
-                                                      ? Color(0xFF4600DC)
-                                                      : Colors.white,
-                                            ),
-                                            child: Text(
-                                              category[index],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                color: buttonStates[index]
-                                                    ? Colors.white
-                                                    : Color(0xFF4600DC),
-                                                fontSize: 15,
-                                                fontFamily: 'Exo',
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ),
+                                                      ? Colors.white
+                                                      : Color(0xFF4600DC),
+                                                  TextAlign.center,
+                                                  FontWeight.w400)),
                                         ),
                                       ],
                                     );
