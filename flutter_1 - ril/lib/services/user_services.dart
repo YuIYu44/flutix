@@ -15,8 +15,8 @@ class UserService {
     });
   }
 
-  static Future<void> updateUser(User1 user1, String category, value) async {
-    _userCollection.doc(user1.email).update({category: value});
+  Future<void> updateUser(String email, String category, value) async {
+    _userCollection.doc(email).update({category: value});
   }
 
   static Future<User1> getUser(String email) async {
@@ -25,11 +25,14 @@ class UserService {
         snapshot['selectedGenres']);
   }
 
-  static Future<List<String>> getvalue(String email) async {
+  static Future<List<String>> getvalue() async {
+    User userFuture = await AutServices().getcurrent();
+    String? email = userFuture.email;
     DocumentSnapshot snapshot = await _userCollection.doc(email).get();
     List<String> value = [
       snapshot.get('name'),
-      snapshot.get('balance').toString()
+      snapshot.get('balance').toString(),
+      snapshot.id
     ];
     return value;
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'SuccesTopUp.dart';
 
 List<int> categories = [
@@ -45,165 +43,194 @@ class Mywallet extends State<wallet> {
         child: Scaffold(
             appBar: barflutix(context),
             body: Padding(
-              padding: customEdgeInsets(context),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buttonblue(context, "Back", Color(0xff4A9DFF),
-                      Color(0xffffffff), Color(0xff4A9DFF), 0, 0.25, () {
-                    Navigator.pop(context);
-                  }),
-                  Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.07),
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.black)),
-                    width: MediaQuery.of(context).size.width * 0.97,
-                    height: MediaQuery.of(context).size.height * 0.1,
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(
-                            MediaQuery.of(context).size.width * 0.02,
-                            0,
-                            MediaQuery.of(context).size.width * 0.02,
-                            MediaQuery.of(context).size.height * 0.01),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                padding: customEdgeInsets(context),
+                child: FutureBuilder(
+                    future: UserService.getvalue(),
+                    builder: (BuildContext context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Balance",
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontFamily: 'Exo',
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              FutureBuilder(
-                                  future: UserService.getvalue(
-                                      BlocProvider.of<user_>(context)
-                                          .state
-                                          .uservalue[0]),
-                                  builder: (BuildContext context, snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.done) {
-                                      if (snapshot.hasData) {
-                                        return Container(
-                                            margin: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.01),
-                                            child: Text(
-                                              snapshot.data![1],
-                                              textAlign: TextAlign.right,
+                              buttonblue(
+                                  context,
+                                  "Back",
+                                  Color(0xff4A9DFF),
+                                  Color(0xffffffff),
+                                  Color(0xff4A9DFF),
+                                  0,
+                                  0.25, () {
+                                Navigator.pop(context);
+                              }),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.07),
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.97,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.1,
+                                  child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          MediaQuery.of(context).size.width *
+                                              0.02,
+                                          0,
+                                          MediaQuery.of(context).size.width *
+                                              0.02,
+                                          MediaQuery.of(context).size.height *
+                                              0.01),
+                                      child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Balance",
+                                              textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 30,
+                                                fontSize: 15,
                                                 fontFamily: 'Exo',
                                                 fontWeight: FontWeight.bold,
                                               ),
-                                            ));
-                                      } else {
-                                        return Text("");
-                                      }
-                                    } else {
-                                      return Text("");
-                                    }
-                                  })
-                            ])),
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.06),
-                      child: Text(
-                        "Top Up",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontFamily: 'Exo',
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
-                  Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.03),
-                      child: GridView.count(
-                          childAspectRatio: MediaQuery.of(context).size.width /
-                              (MediaQuery.of(context).size.height / 4),
-                          shrinkWrap: true,
-                          crossAxisCount: 3,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(categories.length, (index) {
-                            return Column(
-                              children: [
-                                Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.28,
-                                    height: 40,
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        _toggleButtonState(index);
-                                      },
-                                      style: OutlinedButton.styleFrom(
-                                          backgroundColor: buttonStates[index]
-                                              ? Color.fromRGBO(
-                                                  46, 111, 236, 0.5)
-                                              : Colors.white,
-                                          side: BorderSide(
-                                              width: 1.0,
-                                              color: Color(0xFF4600DC))),
-                                      child: Text(
-                                        categories[index].toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: buttonStates[index]
-                                              ? Colors.white
-                                              : Color(0xFF4600DC),
-                                          fontSize: 15,
-                                          fontFamily: 'Exo',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    )),
-                              ],
-                            );
-                          }))),
-                  Container(
-                      margin: EdgeInsets.fromLTRB(
-                          MediaQuery.of(context).size.width * 0.6,
-                          MediaQuery.of(context).size.height * 0.1,
-                          0,
-                          0),
-                      child: buttonblue(
-                          context,
-                          "Top Up",
-                          Color(0xffffffff),
-                          Color(0xff4A9DFF),
-                          Color(0xff4A9DFF),
-                          0,
-                          0.4, () async {
-                        int balance = categories[
-                            buttonStates.indexWhere((value) => value == true)];
-                        List balance_val = await UserService.getvalue(
-                            BlocProvider.of<user_>(context).state.uservalue[0]);
-                        String balance_value = await balance_val[1];
-                        await AutServices.change(
-                            BlocProvider.of<user_>(context).state.uservalue[0],
-                            BlocProvider.of<user_>(context).state.uservalue[1],
-                            'balance',
-                            int.tryParse(balance_value)! + balance);
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => succestopup()),
-                        );
-                      })),
-                ],
-              ),
-            )));
+                                            ),
+                                            Container(
+                                                margin: EdgeInsets.only(
+                                                    bottom:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.01),
+                                                child: Text(
+                                                  snapshot.data![1],
+                                                  textAlign: TextAlign.right,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 30,
+                                                    fontFamily: 'Exo',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ))
+                                          ]))),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.06),
+                                  child: Text(
+                                    "Top Up",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 22,
+                                      fontFamily: 'Exo',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )),
+                              Container(
+                                  margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.03),
+                                  child: GridView.count(
+                                      childAspectRatio: MediaQuery.of(context)
+                                              .size
+                                              .width /
+                                          (MediaQuery.of(context).size.height /
+                                              4),
+                                      shrinkWrap: true,
+                                      crossAxisCount: 3,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      children: List.generate(categories.length,
+                                          (index) {
+                                        return Column(
+                                          children: [
+                                            Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.28,
+                                                height: 40,
+                                                child: OutlinedButton(
+                                                  onPressed: () {
+                                                    _toggleButtonState(index);
+                                                  },
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                          backgroundColor:
+                                                              buttonStates[
+                                                                      index]
+                                                                  ? Color
+                                                                      .fromRGBO(
+                                                                          46,
+                                                                          111,
+                                                                          236,
+                                                                          0.5)
+                                                                  : Colors
+                                                                      .white,
+                                                          side: BorderSide(
+                                                              width: 1.0,
+                                                              color: Color(
+                                                                  0xFF4600DC))),
+                                                  child: Text(
+                                                    categories[index]
+                                                        .toString(),
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: buttonStates[index]
+                                                          ? Colors.white
+                                                          : Color(0xFF4600DC),
+                                                      fontSize: 15,
+                                                      fontFamily: 'Exo',
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                )),
+                                          ],
+                                        );
+                                      }))),
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context).size.width * 0.6,
+                                      MediaQuery.of(context).size.height * 0.1,
+                                      0,
+                                      0),
+                                  child: buttonblue(
+                                      context,
+                                      "Top Up",
+                                      Color(0xffffffff),
+                                      Color(0xff4A9DFF),
+                                      Color(0xff4A9DFF),
+                                      0,
+                                      0.4, () async {
+                                    int balance = categories[buttonStates
+                                        .indexWhere((value) => value == true)];
+                                    await UserService().updateUser(
+                                        snapshot.data![2],
+                                        'balance',
+                                        int.tryParse(snapshot.data![1])! +
+                                            balance);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => succestopup()),
+                                    );
+                                  })),
+                            ],
+                          );
+                        } else {
+                          return Container(
+                            color: ThemeData().scaffoldBackgroundColor,
+                          );
+                        }
+                      }
+                      return Container(
+                        color: ThemeData().scaffoldBackgroundColor,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }))));
   }
 }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/films.dart';
+import 'package:flutter_1/logic(cubit)/films.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'seat_page.dart';

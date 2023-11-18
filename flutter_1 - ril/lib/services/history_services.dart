@@ -4,24 +4,27 @@ class historyService {
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('users');
 
-  static Future gethistory(String email) async {
+  static Future gethistory() async {
+    User value = await AutServices().getcurrent();
     QuerySnapshot snapshot =
-        await _userCollection.doc(email).collection("history").get();
+        await _userCollection.doc(value.email).collection("history").get();
     return snapshot.docs;
   }
 
-  static Future gethistory_info(String email, file_name) async {
+  static Future gethistory_info(file_name) async {
+    User value = await AutServices().getcurrent();
     DocumentSnapshot<Map<String, dynamic>> snapshot = await _userCollection
-        .doc(email)
+        .doc(value.email)
         .collection("history")
         .doc(file_name)
         .get();
     return snapshot.data();
   }
 
-  static Future updatehistory(name, value) async {
+  static Future updatehistory(value) async {
+    User value_ = await AutServices().getcurrent();
     DocumentReference user_reference =
-        await _userCollection.doc(name).collection("history").doc();
+        await _userCollection.doc(value_.email).collection("history").doc();
     DocumentSnapshot snapshot = await user_reference.get();
     if (!snapshot.exists) {
       await user_reference.set({
@@ -37,12 +40,15 @@ class historyService {
     }
   }
 
-  static Future historyrating(name, value, film_code, film_real) async {
-    DocumentReference user_reference =
-        await _userCollection.doc(name).collection("history").doc(film_code);
+  static Future historyrating(rate, film_code, film_real) async {
+    User value = await AutServices().getcurrent();
+    DocumentReference user_reference = await _userCollection
+        .doc(value.email)
+        .collection("history")
+        .doc(film_code);
     await user_reference.update({
-      "rating": value,
+      "rating": rate,
     });
-    await show_film(film_real).update_rating(value);
+    await show_film(film_real).update_rating(rate);
   }
 }

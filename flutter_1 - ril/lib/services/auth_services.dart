@@ -1,10 +1,12 @@
 part of 'services.dart';
 
 class AutServices {
-  // ignore: prefer_final_fields
   static FirebaseAuth _auth = FirebaseAuth.instance;
 
-  static get user1 => null;
+  Future getcurrent() async {
+    final User? user = await _auth.currentUser;
+    return user;
+  }
 
   static Future<String> signUp(
       String email, String password, String name) async {
@@ -24,18 +26,6 @@ class AutServices {
       }
       return "Error Is Found";
     }
-  }
-
-  static Future<String> change(
-      String email, String password, String type, whatyouwant) async {
-    try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(
-          email: email.toString(), password: password.toString());
-      User1 user1 = result.user!.convertToUser(email: email);
-      await UserService.updateUser(user1, type, whatyouwant);
-      return "";
-    } catch (e) {}
-    return "Error Is Found";
   }
 
   static Future<bool> genre_exist(String email) async {
@@ -58,16 +48,15 @@ class AutServices {
           email: email.toString(), password: password.toString());
       return "";
     } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == "UNABLE TO ESTABLISH CONNECTION ON CHANNEL") {
-          return "Please fill all of the fields";
-        }
-        if (e.code == "INVALID_LOGIN_CREDENTIALS") {
-          return "Account Not Found";
-        }
-        return e.toString().toUpperCase().split("]")[1];
+      if (e
+          .toString()
+          .toUpperCase()
+          .split("]")[1]
+          .contains("UNABLE TO ESTABLISH")) {
+        return "Fill all the fields Or Check your connection";
       }
-      return "Error Is Found";
+
+      return "Wrong email/old password";
     }
   }
 
@@ -89,17 +78,26 @@ class AutServices {
           newPassword != currentPassword) {
         try {
           await user.updatePassword(newPassword);
-          change(email, newPassword, "name", name);
+          UserService().updateUser(email, "name", name);
           return "";
         } catch (e) {
-          print(e);
           return e.toString().toUpperCase().split("]")[1];
         }
       } else {
         return "New Password & Username must be new and contain at least 6 characters";
       }
     } catch (e) {
-      return e.toString().toUpperCase().split("]")[1];
+      if (e
+          .toString()
+          .toUpperCase()
+          .split("]")[1]
+          .contains("UNABLE TO ESTABLISH")) {
+        return "Fill all the fields Or Check your connection";
+      } else if (e.toString().contains(
+          "We have blocked all requests from this device due to unusual activity")) {
+        return "Due too many attempt, Your account is blocked temporarily";
+      }
+      return "Wrong email/old password";
     }
   }
 }

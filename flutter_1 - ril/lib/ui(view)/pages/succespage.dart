@@ -5,12 +5,10 @@ import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 
 class succespage extends StatelessWidget {
-  String email;
-  succespage(this.email);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: UserService.getvalue(email),
+        future: UserService.getvalue(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {

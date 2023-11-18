@@ -1,26 +1,31 @@
 import 'package:barcode/barcode.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 List<int> rated = [0, 1, 2, 3, 4, 5];
 
-class TicketDetail extends StatelessWidget {
+class TicketDetail extends StatefulWidget {
   final String previousPage;
   final String id;
-
   TicketDetail({required this.previousPage, required this.id});
 
+  @override
+  _TicketDetailState createState() => _TicketDetailState(previousPage, id);
+}
+
+class _TicketDetailState extends State<TicketDetail> {
+  final String previousPage;
+  final String id;
+  _TicketDetailState(this.previousPage, this.id);
   int selectedvalue = 0;
+
   @override
   Widget build(BuildContext context) {
     final bc = Barcode.dataMatrix();
     return FutureBuilder(
-        future: historyService.gethistory_info(
-            BlocProvider.of<user_>(context).state.uservalue[0], id),
+        future: historyService.gethistory_info(id),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData && snapshot.data.isNotEmpty) {
@@ -119,21 +124,22 @@ class TicketDetail extends StatelessWidget {
                                                     value: snapshot
                                                             .data["rating"] ??
                                                         selectedvalue,
-                                                    onChanged:
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        selectedvalue =
+                                                            value as int;
                                                         snapshot.data[
                                                                     "rating"] ==
                                                                 null
-                                                            ? (value) => {
-                                                                  historyService.historyrating(
-                                                                      BlocProvider.of<user_>(
-                                                                              context)
-                                                                          .state
-                                                                          .uservalue[0],
-                                                                      value,
-                                                                      id,
-                                                                      snapshot.data["link_name"])
-                                                                }
-                                                            : null,
+                                                            ? historyService
+                                                                .historyrating(
+                                                                    value,
+                                                                    id,
+                                                                    snapshot.data[
+                                                                        "link_name"])
+                                                            : null;
+                                                      });
+                                                    },
                                                     icon: Icon(
                                                         Icons.arrow_downward),
                                                     items:
@@ -225,6 +231,7 @@ class TicketDetail extends StatelessWidget {
             }
           }
           return Container(
+            color: Colors.white,
             child: Center(child: CircularProgressIndicator()),
           );
         });

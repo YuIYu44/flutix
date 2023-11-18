@@ -1,9 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/main.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'changeprofile.dart';
@@ -351,8 +350,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
   @override
   Widget ticket_new(BuildContext context) {
     return FutureBuilder(
-        future: historyService
-            .gethistory(BlocProvider.of<user_>(context).state.uservalue[0]),
+        future: historyService.gethistory(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
@@ -371,9 +369,6 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                 margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 child: FutureBuilder(
                                     future: historyService.gethistory_info(
-                                        BlocProvider.of<user_>(context)
-                                            .state
-                                            .uservalue[0],
                                         snapshot.data[index].id),
                                     builder:
                                         (BuildContext context, snapshot_info) {
@@ -528,8 +523,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
 
   Widget ticket_old(BuildContext context) {
     return FutureBuilder(
-        future: historyService
-            .gethistory(BlocProvider.of<user_>(context).state.uservalue[0]),
+        future: historyService.gethistory(),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return SingleChildScrollView(
@@ -548,9 +542,6 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                 margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 child: FutureBuilder(
                                     future: historyService.gethistory_info(
-                                        BlocProvider.of<user_>(context)
-                                            .state
-                                            .uservalue[0],
                                         snapshot.data[index].id),
                                     builder:
                                         (BuildContext context, snapshot_info) {
@@ -751,59 +742,96 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
   }
 
   Widget profile(context) {
-    return Center(
-        child: Container(
-      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BlocConsumer<user_, userstate>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return Text(state.uservalue[2],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Exo',
-                      fontWeight: FontWeight.bold,
-                    ));
-              }),
-          BlocConsumer<user_, userstate>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return Text(state.uservalue[0],
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17,
-                      fontFamily: 'Exo',
-                      fontWeight: FontWeight.normal,
-                    ));
-              }),
-          buttonblue(context, "Edit Profile", Color(0xff4A9DFF),
-              Color(0xffffffff), Color(0xff4A9DFF), 0.03, 0.4, () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (change_context) => BlocProvider.value(
-                    value: BlocProvider.of<user_>(context),
-                    child: changeprofile())));
-          }),
-          buttonblue(context, "My Wallet", Color(0xff4A9DFF), Color(0xffffffff),
-              Color(0xff4A9DFF), 0.07, 0.7, () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (change_context) => BlocProvider.value(
-                    value: BlocProvider.of<user_>(context), child: wallet())));
-          }),
-          buttonblue(context, "Rate Flutix App", Color(0xff4A9DFF),
-              Color(0xffffffff), Color(0xff4A9DFF), 0.05, 0.7, () {}),
-          buttonblue(context, "Log Out", Color(0xff4A9DFF), Color(0xffffffff),
-              Color(0xff4A9DFF), 0.05, 0.7, () async {
-            BlocProvider.of<user_>(context).delete();
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => MyApp()),
-                (Route<dynamic> route) => false);
-          })
-        ],
-      ),
-    ));
+    return SmartRefresher(
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        enablePullDown: true,
+        child: Center(
+            child: Container(
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * 0.1),
+                child: FutureBuilder(
+                    future: UserService.getvalue(),
+                    builder: (BuildContext context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasData) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(snapshot.data![0],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Exo',
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Text(snapshot.data![2],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                    fontFamily: 'Exo',
+                                    fontWeight: FontWeight.normal,
+                                  )),
+                              buttonblue(
+                                  context,
+                                  "Edit Profile",
+                                  Color(0xff4A9DFF),
+                                  Color(0xffffffff),
+                                  Color(0xff4A9DFF),
+                                  0.03,
+                                  0.4, () {
+                                final result = Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) => changeprofile()))
+                                    .then((_) => setState(() {}));
+                              }),
+                              buttonblue(
+                                  context,
+                                  "My Wallet",
+                                  Color(0xff4A9DFF),
+                                  Color(0xffffffff),
+                                  Color(0xff4A9DFF),
+                                  0.07,
+                                  0.7, () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => wallet()));
+                              }),
+                              buttonblue(
+                                  context,
+                                  "Rate Flutix App",
+                                  Color(0xff4A9DFF),
+                                  Color(0xffffffff),
+                                  Color(0xff4A9DFF),
+                                  0.05,
+                                  0.7,
+                                  () {}),
+                              buttonblue(
+                                  context,
+                                  "Log Out",
+                                  Color(0xff4A9DFF),
+                                  Color(0xffffffff),
+                                  Color(0xff4A9DFF),
+                                  0.05,
+                                  0.7, () async {
+                                FirebaseAuth.instance.signOut();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => MyApp()),
+                                    (Route<dynamic> route) => false);
+                              })
+                            ],
+                          );
+                        } else {
+                          return Container(
+                            color: ThemeData().scaffoldBackgroundColor,
+                          );
+                        }
+                      }
+                      return Container(
+                        color: ThemeData().scaffoldBackgroundColor,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }))));
   }
 
   @override
@@ -828,12 +856,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
             currentIndex: _index,
             onTap: (index) async {
               if (index != _index) {
-                final userCubit = BlocProvider.of<user_>(context);
-                List<String> _balance_name =
-                    await UserService.getvalue(userCubit.state.uservalue[0]);
                 setState(() {
-                  userCubit.update_name(_balance_name[0]);
-
                   _index = index;
                 });
               }

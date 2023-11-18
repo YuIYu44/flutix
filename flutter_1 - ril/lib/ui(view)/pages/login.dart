@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/main.dart';
 import 'signup.dart';
@@ -63,15 +62,13 @@ class _login extends State<login> {
                   error = error;
                 });
                 if (error == "") {
-                  user_().update_shared(
-                      [emailController.text, passwordController.text]);
                   if ((await AutServices.genre_exist(emailController.text)) ==
                       false) {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                userprofiling()));
+                                userprofiling(emailController.text)));
                   } else {
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => MyApp()),

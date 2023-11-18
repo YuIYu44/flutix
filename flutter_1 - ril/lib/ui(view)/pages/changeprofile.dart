@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class changeprofile extends StatefulWidget {
   @override
@@ -100,14 +98,7 @@ class _changeprofile extends State<changeprofile> {
                           error = check;
                         });
                         if (error == "") {
-                          BlocProvider.of<user_>(context)
-                              .update_username_password([
-                            emailController.text,
-                            newpasswordController.text
-                          ]);
-                          BlocProvider.of<user_>(context)
-                              .update_name(usernameController.text);
-                          Navigator.pop(context);
+                          Navigator.pop(context, true);
                         }
                       }),
                     ),

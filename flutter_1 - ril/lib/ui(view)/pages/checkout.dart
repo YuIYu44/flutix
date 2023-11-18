@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_1/bloc(modelview)/films.dart';
-import 'package:flutter_1/bloc(modelview)/user_.dart';
+import 'package:flutter_1/logic(cubit)/films.dart';
 import 'package:flutter_1/services/services.dart';
 import 'package:flutter_1/ui(view)/widget/widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +23,6 @@ class checkout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filmCubit = BlocProvider.of<films_>(context);
-    final userCubit = BlocProvider.of<user_>(context);
     return FutureBuilder(
         future: show_film(filmCubit.state.uservalue[0]).getposts_weblink(""),
         builder: (BuildContext context, snapshot) {
@@ -172,8 +170,7 @@ class checkout extends StatelessWidget {
                                                     )))
                                           ])),
                                   FutureBuilder(
-                                      future: UserService.getvalue(
-                                          userCubit.state.uservalue[0]),
+                                      future: UserService.getvalue(),
                                       builder: (BuildContext context, balance) {
                                         if (balance.connectionState ==
                                             ConnectionState.done) {
@@ -265,46 +262,33 @@ class checkout extends StatelessWidget {
                                                                     (context) =>
                                                                         successcheckout()));
                                                         await historyService
-                                                            .updatehistory(
-                                                                userCubit.state
-                                                                    .uservalue[0],
-                                                                [
-                                                              filmCubit.state
-                                                                  .uservalue[0],
-                                                              snapshot
-                                                                  .data["link"],
-                                                              snapshot.data[
-                                                                  "movie_name"],
-                                                              snapshot.data[
-                                                                  "category"],
-                                                              filmCubit.state
-                                                                  .uservalue[1],
-                                                              filmCubit.state
-                                                                      .uservalue[
-                                                                  2][0],
-                                                              filmCubit.state
-                                                                      .uservalue[
-                                                                  2][1],
-                                                              filmCubit.state
-                                                                  .uservalue[3]
-                                                            ]);
+                                                            .updatehistory([
+                                                          filmCubit.state
+                                                              .uservalue[0],
+                                                          snapshot.data["link"],
+                                                          snapshot.data[
+                                                              "movie_name"],
+                                                          snapshot
+                                                              .data["category"],
+                                                          filmCubit.state
+                                                              .uservalue[1],
+                                                          filmCubit.state
+                                                              .uservalue[2][0],
+                                                          filmCubit.state
+                                                              .uservalue[2][1],
+                                                          filmCubit.state
+                                                              .uservalue[3]
+                                                        ]);
                                                         filmCubit.close();
-                                                        List balance_val =
-                                                            await UserService.getvalue(
-                                                                BlocProvider.of<
-                                                                            user_>(
-                                                                        context)
-                                                                    .state
-                                                                    .uservalue[0]);
+                                                        List val_user =
+                                                            await UserService
+                                                                .getvalue();
 
-                                                        await AutServices.change(
-                                                            userCubit.state
-                                                                .uservalue[0],
-                                                            userCubit.state
-                                                                .uservalue[1],
+                                                        await UserService().updateUser(
+                                                            val_user[2],
                                                             'balance',
                                                             int.tryParse(
-                                                                    balance_val[
+                                                                    val_user[
                                                                         1])! -
                                                                 filmCubit
                                                                     .checkout_val()[6]);
