@@ -56,7 +56,7 @@ class AutServices {
         return "Fill all the fields Or Check your connection";
       }
 
-      return "Wrong email/old password";
+      return "Wrong email/password";
     }
   }
 
