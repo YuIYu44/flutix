@@ -62,7 +62,10 @@ class Storage {
         } else {
           if (dataMap.containsKey('rating') == false) {
             await film_.update({'available': 1});
-            await film_.update({'category': data[a][1], 'rating': 0});
+            await film_.update({
+              'category': data[a][1],
+              'rating': [0, 0]
+            });
           }
           List<String> dateList = data[a][2].split(',');
           for (int dates = 0; dates < dateList.length; dates++) {
