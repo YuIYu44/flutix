@@ -386,7 +386,7 @@ class homeState extends State<home> with SingleTickerProviderStateMixin {
                                                         .parse(snapshot_info
                                                             .data['date']))
                                                 .isAtSameMomentAs(
-                                                    DateTime.now())) {
+                                                    DateUtils.dateOnly(DateTime.now()))) {
                                           return Padding(
                                               padding:
                                                   EdgeInsets.only(bottom: 10),
