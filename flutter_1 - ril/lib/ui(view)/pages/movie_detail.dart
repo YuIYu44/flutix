@@ -73,8 +73,7 @@ class movie_detail extends StatelessWidget {
                               children: [
                                 Row(children: [
                                   Text(
-                                    snapshot.data['rating'][0].toString() +
-                                        "   ",
+                                    snapshot.data['rating'].toString() + "   ",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.black,
