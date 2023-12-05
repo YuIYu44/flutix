@@ -16,4 +16,5 @@
 ### Flutter Configuration <img src="https://github.com/YuIYu44/flutix/blob/main/readme_icon/icons8-setting-128.png" width="50" title="icon"> ###
 #### Made with Flutter 3.13.9 ####
 #### sdk: >=3.0.6 <4.0.0 ####
+#### Database & Authentication with Firebase ##
   
